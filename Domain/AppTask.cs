@@ -1,0 +1,10 @@
+﻿using System;
+
+namespace Domain
+{
+    public class AppTask
+    {
+        public int Id { get; set; }
+        public string Title { get; set; }
+    }
+}
