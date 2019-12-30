@@ -1,12 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Domain
 {
-    public class AppTask
+    public class AppList
     {
         public Guid Id { get; set; }
         public string Title { get; set; }
-        public bool IsDone { get; set; }
+        public ICollection<AppTask> AppTasks { get; set; }
     }
 }
