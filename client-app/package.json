@@ -17,7 +17,9 @@
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-final-form": "^6.3.3",
+    "react-flip-move": "^3.0.4",
     "react-scripts": "3.3.0",
+    "react-toastify": "^5.5.0",
     "react-widgets": "^4.4.11",
     "semantic-ui-react": "^0.88.2",
     "typescript": "^3.7.4"

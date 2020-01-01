@@ -1,42 +1,58 @@
 import React, { useContext } from "react";
-import {
-  Checkbox,
-  Item,
-  Button,
-  Icon,
-  Grid,
-  Container
-} from "semantic-ui-react";
 import AppTaskStore from "../../../app/stores/appTaskStore";
 import { observer } from "mobx-react-lite";
 import { IAppTask } from "../../../app/models/appTask";
+import { Button, List, Transition } from "semantic-ui-react";
 
 const TodoItem: React.FC<{ appTask: IAppTask }> = ({ appTask }) => {
   const appTaskStore = useContext(AppTaskStore);
 
-  const { markAppTask } = appTaskStore;
+  const {
+    completeAppTask,
+    recoverAppTask,
+    deleteAppTask,
+    handleMouseEnterItem,
+    handleMouseExitItem,
+    hoveredItemId
+  } = appTaskStore;
 
   return (
-    <Item>
-      <Item.Content>
-        <Grid>
-          <Grid.Column width={5}>
-            <Checkbox
-              label={appTask.title}
-              defaultChecked={appTask.isDone}
-              onClick={(e, cb) => markAppTask(appTask.id, cb.checked === true)}
+    <List.Item>
+      <List.Content
+        onMouseEnter={() => handleMouseEnterItem(appTask.id)}
+        onMouseLeave={() => handleMouseExitItem()}
+      >
+        <Transition
+          visible={hoveredItemId === appTask.id}
+          animation="scale"
+          duration={300}
+        >
+          <List.Content>
+            <Button
+              disabled={appTask.isDone}
+              floated="right"
+              icon="ban"
+              negative
+              size="tiny"
+              onClick={() => deleteAppTask(appTask.id)}
             />
-          </Grid.Column>
-          <Grid.Column width={4}>
-            <Container>
-              <Button icon size="tiny">
-                <Icon name="pencil alternate" />
-              </Button>
-            </Container>
-          </Grid.Column>
-        </Grid>
-      </Item.Content>
-    </Item>
+          </List.Content>
+        </Transition>
+        <Button
+          icon={appTask.isDone ? "undo" : "check"}
+          positive={!appTask.isDone}
+          negative={appTask.isDone}
+          size="tiny"
+          onClick={
+            appTask.isDone
+              ? () => recoverAppTask(appTask.id)
+              : () => completeAppTask(appTask.id)
+          }
+        />
+
+        <big style={{ marginLeft: "10px" }}>{appTask.title}</big>
+      </List.Content>
+    </List.Item>
   );
 };
 

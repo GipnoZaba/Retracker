@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Application.AppTasks;
 using Domain;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using Persistence;
 
 namespace API.Controllers
@@ -52,10 +49,10 @@ namespace API.Controllers
             return await Mediator.Send(command);
         }
 
-        [HttpDelete]
-        public async Task<ActionResult<Unit>> Delete(Delete.Command command)
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<Unit>> Delete(Guid id)
         {
-            return await Mediator.Send(command);
+            return await Mediator.Send(new Delete.Command{ Id = id });
         }
     }
 }
