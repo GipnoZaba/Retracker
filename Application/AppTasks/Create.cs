@@ -5,6 +5,7 @@ using Domain;
 using MediatR;
 using Persistence;
 using System.Linq;
+using FluentValidation;
 
 namespace Application.AppTasks
 {
@@ -14,6 +15,14 @@ namespace Application.AppTasks
         {
             public Guid Id { get; set; }
             public string Title { get; set; }
+        }
+
+        public class CommandValidator : AbstractValidator<Command>
+        {
+            public CommandValidator()
+            {
+                RuleFor(x => x.Title).NotEmpty();
+            }
         }
 
         public class Handler : IRequestHandler<Command>
