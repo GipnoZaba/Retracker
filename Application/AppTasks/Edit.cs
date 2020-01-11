@@ -6,6 +6,7 @@ using Application.Errors;
 using Domain;
 using MediatR;
 using Persistence;
+using System.Linq;
 
 namespace Application.AppTasks
 {
@@ -15,6 +16,8 @@ namespace Application.AppTasks
         {
             public Guid Id { get; set; }
             public string Title { get; set; }
+            public string Description { get; set; }
+            public Nullable<bool> IsDone { get; set; }
         }
 
         public class Handler : IRequestHandler<Command>
@@ -35,6 +38,8 @@ namespace Application.AppTasks
                 }
 
                 appTask.Title = request.Title ?? appTask.Title;
+                appTask.Description = request.Description ?? appTask.Description;
+                appTask.IsDone = request.IsDone ?? appTask.IsDone;
 
                 bool isSaved = await _context.SaveChangesAsync() > 0;
 

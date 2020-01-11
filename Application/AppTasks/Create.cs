@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Domain;
 using MediatR;
 using Persistence;
+using System.Linq;
 
 namespace Application.AppTasks
 {
@@ -28,6 +29,7 @@ namespace Application.AppTasks
                 AppTask appTask = new AppTask 
                 {
                     Id = request.Id,
+                    OrderIndex = _context.AppTasks.Count(),
                     Title = request.Title
                 };
 

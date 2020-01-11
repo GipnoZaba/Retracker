@@ -13,11 +13,11 @@ namespace Persistence
             {
                 var appTasks = new List<AppTask>
                 {
-                    new AppTask { Title = "Wash dishes", IsDone = false},
-                    new AppTask { Title = "Gym", IsDone = false},
-                    new AppTask { Title = "Agile homework", IsDone = true},
-                    new AppTask { Title = "Morning routine", IsDone = true},
-                    new AppTask { Title = "Read chapter", IsDone = false}
+                    new AppTask { Title = "Wash dishes"},
+                    new AppTask { Title = "Gym"},
+                    new AppTask { Title = "Agile homework"},
+                    new AppTask { Title = "Morning routine"},
+                    new AppTask { Title = "Read chapter"}
                 };
 
                 context.AddRange(appTasks);

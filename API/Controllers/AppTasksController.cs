@@ -42,13 +42,6 @@ namespace API.Controllers
             return await Mediator.Send(command);
         }
 
-        [HttpPut("{id}/mark")]
-        public async Task<ActionResult<Unit>> Mark(Guid id, Mark.Command command)
-        {
-            command.Id = id;
-            return await Mediator.Send(command);
-        }
-
         [HttpDelete("{id}")]
         public async Task<ActionResult<Unit>> Delete(Guid id)
         {

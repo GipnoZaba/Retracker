@@ -1,5 +1,6 @@
 import React from "react";
 import { Menu, Icon, Segment } from "semantic-ui-react";
+import "../../app/layout/styles.css";
 
 const menuStyle = {
   height: "100%",
@@ -8,48 +9,44 @@ const menuStyle = {
   maxWidth: "160px"
 };
 
-const menuItemStyle = {
-  fontSize: "18px"
-};
-
 const SideBar = () => {
   return (
     <Menu vertical secondary pointing style={menuStyle}>
       <Menu.Item>
-        <Menu.Header style={menuItemStyle}>Workspace</Menu.Header>
+        <Menu.Header className="menuFont">Workspace</Menu.Header>
       </Menu.Item>
       <Menu.Menu>
         <Menu.Item as="a" name="gamepad">
           <Icon size="large" name="gamepad" />
-          <div style={menuItemStyle}>Today</div>
+          <div className="menuFont">Today</div>
         </Menu.Item>
         <Menu.Item as="a" name="video camera">
           <Icon size="large" name="video camera" />
-          <div style={menuItemStyle}>7 Days</div>
+          <div className="menuFont">7 Days</div>
         </Menu.Item>
         <Menu.Item as="a" name="video play">
           <Icon size="large" name="video play" />
-          <div style={menuItemStyle}>Projects</div>
+          <div className="menuFont">Projects</div>
         </Menu.Item>
       </Menu.Menu>
 
       <Segment attached></Segment>
 
       <Menu.Item>
-        <Menu.Header style={menuItemStyle}>Analyze</Menu.Header>
+        <Menu.Header className="menuFont">Analyze</Menu.Header>
       </Menu.Item>
       <Menu.Menu>
         <Menu.Item as="a" name="gamepad">
           <Icon size="large" name="gamepad" />
-          <div style={menuItemStyle}>Stats</div>
+          <div className="menuFont">Stats</div>
         </Menu.Item>
         <Menu.Item as="a" name="video camera">
           <Icon size="large" name="video camera" />
-          <div style={menuItemStyle}>Stats</div>
+          <div className="menuFont">Stats</div>
         </Menu.Item>
         <Menu.Item as="a" name="video play">
           <Icon size="large" name="video play" />
-          <div style={menuItemStyle}>Stats</div>
+          <div className="menuFont">Stats</div>
         </Menu.Item>
       </Menu.Menu>
     </Menu>

@@ -9,7 +9,6 @@ class AppTaskStore {
   messageErrorRetrieve = "Problem retrieving data";
 
   @observable appTasksRegistry = new Map<string, IAppTask>();
-  @observable hoveredItemId: string = "";
 
   @action loadAppTasks = async () => {
     try {
@@ -26,14 +25,20 @@ class AppTaskStore {
     }
   };
 
-  @computed get tasksByOrder() {
+  @computed get todoTasksByOrder() {
     return this.groupAppTasksByOrder(
-      Array.from(this.appTasksRegistry.values())
+      Array.from(this.appTasksRegistry.values()).filter(task => !task.isDone)
+    );
+  }
+
+  @computed get doneTasksByOrder() {
+    return this.groupAppTasksByOrder(
+      Array.from(this.appTasksRegistry.values()).filter(task => task.isDone)
     );
   }
 
   groupAppTasksByOrder(appTasks: IAppTask[]) {
-    return appTasks;
+    return appTasks.sort((a, b) => a.orderIndex - b.orderIndex);
   }
 
   @action createAppTask = async (appTask: IAppTask) => {
@@ -75,51 +80,17 @@ class AppTaskStore {
     }
   };
 
-  @action completeAppTask = async (id: string) => {
-    try {
-      await agent.AppTasks.mark(id, true);
+  getTodoLength() {
+    return Array.from(this.appTasksRegistry.values()).filter(
+      task => !task.isDone
+    ).length;
+  }
 
-      runInAction("completing task", () => {
-        const appTask = this.appTasksRegistry.get(id);
-        if (appTask !== undefined) {
-          appTask.isDone = true;
-          this.appTasksRegistry.set(id, appTask);
-        }
-
-        this.hoveredItemId = "";
-      });
-    } catch (error) {
-      runInAction("complete task error", () => {});
-      toast.error(this.messageErrorSubmit);
-    }
-  };
-
-  @action recoverAppTask = async (id: string) => {
-    try {
-      await agent.AppTasks.mark(id, false);
-
-      runInAction("recovering task", () => {
-        const appTask = this.appTasksRegistry.get(id);
-        if (appTask !== undefined) {
-          appTask.isDone = false;
-          this.appTasksRegistry.set(id, appTask);
-        }
-
-        this.hoveredItemId = "";
-      });
-    } catch (error) {
-      runInAction("recover task error", () => {});
-      toast.error(this.messageErrorSubmit);
-    }
-  };
-
-  @action handleMouseEnterItem = (id: string) => {
-    this.hoveredItemId = id;
-  };
-
-  @action handleMouseExitItem = () => {
-    this.hoveredItemId = "";
-  };
+  getDoneLength() {
+    return Array.from(this.appTasksRegistry.values()).filter(
+      task => task.isDone
+    ).length;
+  }
 }
 
 export default createContext(new AppTaskStore());

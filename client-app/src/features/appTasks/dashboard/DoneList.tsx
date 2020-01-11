@@ -12,9 +12,9 @@ const animationSettings = {
   leaveAnimation: "accordionVertical" as any
 };
 
-const TodoList = () => {
+const DoneList = () => {
   const appTaskStore = useContext(AppTaskStore);
-  const { todoTasksByOrder } = appTaskStore;
+  const { doneTasksByOrder } = appTaskStore;
 
   return (
     <FlipMove
@@ -25,7 +25,7 @@ const TodoList = () => {
       enterAnimation={animationSettings.enterAnimation}
       leaveAnimation={animationSettings.leaveAnimation}
     >
-      {todoTasksByOrder.map(appTask => (
+      {doneTasksByOrder.map(appTask => (
         <div key={appTask.id}>
           <TodoItem appTask={appTask} />
         </div>
@@ -34,4 +34,4 @@ const TodoList = () => {
   );
 };
 
-export default observer(TodoList);
+export default observer(DoneList);

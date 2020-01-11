@@ -1,5 +1,7 @@
 export interface IAppTask {
     id: string;
+    orderIndex: number;
     title: string;
-    isDone: boolean;
+    description?: string;
+    isDone?: boolean;
 }

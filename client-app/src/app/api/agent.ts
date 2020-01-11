@@ -21,10 +21,7 @@ const AppTasks = {
   list: (): Promise<IAppTask[]> => requests.get("/apptasks"),
   create: (appTask: IAppTask) => requests.post("/apptasks", appTask),
   details: (id: string) => requests.get(`/apptasks/${id}`),
-  edit: (appTask: IAppTask) =>
-    requests.put(`/apptasks/${appTask.id}`, appTask),
-  mark: (id: string, value: boolean) =>
-    requests.put(`/apptasks/${id}/mark`, { isDone: value }),
+  edit: (appTask: IAppTask) => requests.put(`/apptasks/${appTask.id}`, appTask),
   delete: (id: string) => requests.del(`/apptasks/${id}`)
 };
 
