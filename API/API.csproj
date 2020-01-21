@@ -1,11 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
+
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
+    <UserSecretsId>ddc84ded-39fe-4f21-aea3-22df2de82d8f</UserSecretsId>
   </PropertyGroup>
+
   <ItemGroup>
-    <ProjectReference Include="..\Application\Application.csproj"/>
+    <ProjectReference Include="..\Application\Application.csproj" />
+    <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
   </ItemGroup>
+  
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.0.0"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.0.0" />
   </ItemGroup>
+
 </Project>

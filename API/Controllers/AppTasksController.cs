@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Application.AppTasks;
 using Domain;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Persistence;
 
@@ -30,6 +31,7 @@ namespace API.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ActionResult<AppTask>> Details(Guid id)
         {
             return await Mediator.Send(new Details.Query{ Id = id });
