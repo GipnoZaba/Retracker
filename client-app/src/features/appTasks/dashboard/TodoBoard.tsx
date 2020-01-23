@@ -1,32 +1,34 @@
 import React, { useContext, useEffect } from "react";
 import TodoList from "./TodoList";
-import { Header, Segment, Grid } from "semantic-ui-react";
-import AppTaskStore from "../../../app/stores/appTaskStore";
+import { Header, Segment, Grid, Label } from "semantic-ui-react";
 import { observer } from "mobx-react-lite";
 import { colors } from "../../../app/common/styling/ColorPalette";
-import TodoAddTaskForm from "./TodoAddTaskForm";
 import DoneList from "./DoneList";
+import { RootStoreContext } from "../../../app/stores/rootStore";
 
 const TodoBoard = () => {
-  const appTaskStore = useContext(AppTaskStore);
+  const rootStore = useContext(RootStoreContext);
+  const { loadAppTasks } = rootStore.activityStore;
+  const { isLoggedIn } = rootStore.userStore;
 
   useEffect(() => {
-    appTaskStore.loadAppTasks();
-  }, [appTaskStore]);
+    loadAppTasks();
+  }, [loadAppTasks]);
+
+  if (isLoggedIn === false) {
+    return <Label content="Not logged in" />;
+  }
 
   return (
-    <Segment attached style={{ marginLeft: "160px" }}>
-      <Grid>
-        <Grid.Column width={4}>
+    <Segment attached>
+      <Grid stackable>
+        <Grid.Column width={8}>
+          <Header as="h2" content="Today" />
+          <TodoList />
+        </Grid.Column>
+        <Grid.Column width={8}>
           <Header as="h2" content="Today" />
           <Segment clearing secondary color={colors.positive}>
-            <TodoList />
-            <TodoAddTaskForm />
-          </Segment>
-        </Grid.Column>
-        <Grid.Column width={4}>
-          <Header as="h2" content="Done" />
-          <Segment secondary color={colors.negative}>
             <DoneList />
           </Segment>
         </Grid.Column>

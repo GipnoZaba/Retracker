@@ -1,69 +1,72 @@
 import React, { useContext, useState } from "react";
-import AppTaskStore from "../../../app/stores/appTaskStore";
 import { observer } from "mobx-react-lite";
 import { IAppTask } from "../../../app/models/appTask";
 import { Button, List, Transition, Segment } from "semantic-ui-react";
 import { colors } from "../../../app/common/styling/ColorPalette";
-import "../../../app/layout/styles.css";
-import EditModal from "./EditModal";
+import { RootStoreContext } from "../../../app/stores/rootStore";
 
 const TodoItem: React.FC<{ appTask: IAppTask }> = ({ appTask }) => {
-  const appTaskStore = useContext(AppTaskStore);
-
-  const { editAppTask, deleteAppTask } = appTaskStore;
+  const rootStore = useContext(RootStoreContext);
+  const { editAppTask, deleteAppTask, submitting } = rootStore.activityStore;
 
   const [hoverItemId, setHoverItemId] = useState("");
 
   return (
-    <List.Item className="task">
-      <Segment.Group>
-        <List.Content
-          onMouseEnter={() => setHoverItemId(appTask.id)}
-          onMouseLeave={() => setHoverItemId("")}
-        >
-          <Transition
-            visible={hoverItemId === appTask.id}
-            animation="scale"
-            duration={300}
-          >
-            <List.Content>
-              <Button
-                disabled={appTask.isDone}
-                floated="right"
-                icon="ban"
-                color={colors.negative}
-                size="tiny"
-                onClick={() => deleteAppTask(appTask.id)}
-              />
-              <EditModal
-                appTask={appTask}
-                trigger={
-                  <Button
-                    disabled={appTask.isDone}
-                    floated="right"
-                    color={colors.positive}
-                    icon="edit"
-                    size="tiny"
-                    onClick={() => setHoverItemId("")}
-                  />
+    <List.Item>
+      <Segment
+        onMouseEnter={() => setHoverItemId(appTask.id)}
+        onMouseLeave={() => setHoverItemId("")}
+      >
+        <Button
+          loading={submitting}
+          inverted
+          icon={appTask.isDone ? "undo" : "check"}
+          color={appTask.isDone ? colors.negative : colors.positive}
+          size="tiny"
+          onClick={
+            appTask.isDone
+              ? () => {
+                  editAppTask({ ...appTask, isDone: false });
+                  setHoverItemId("");
                 }
-              />
-            </List.Content>
-          </Transition>
-          <Button
-            icon={appTask.isDone ? "undo" : "check"}
-            color={appTask.isDone ? colors.negative : colors.positive}
-            size="tiny"
-            onClick={
-              appTask.isDone
-                ? () => editAppTask({ ...appTask, isDone: false })
-                : () => editAppTask({ ...appTask, isDone: true })
-            }
-          />
+              : () => {
+                  editAppTask({ ...appTask, isDone: true });
+                  setHoverItemId("");
+                }
+          }
+        />
 
-          <big className="paddingLeft small">{appTask.title}</big>
-        </List.Content>
-      </Segment.Group>
+        <big className="paddingLeft small">{appTask.title}</big>
+        <Transition
+          visible={hoverItemId === appTask.id}
+          animation="scale"
+          duration={0}
+        >
+          <Button.Group floated="right">
+            <Button
+              loading={submitting}
+              inverted
+              disabled={appTask.isDone}
+              color={colors.positive}
+              icon="edit"
+              size="tiny"
+              onClick={() => setHoverItemId("")}
+            />
+            <Button
+              loading={submitting}
+              inverted
+              disabled={appTask.isDone}
+              icon="ban"
+              color={colors.negative}
+              size="tiny"
+              onClick={() => {
+                deleteAppTask(appTask.id);
+                setHoverItemId("");
+              }}
+            />
+          </Button.Group>
+        </Transition>
+      </Segment>
     </List.Item>
   );
 };

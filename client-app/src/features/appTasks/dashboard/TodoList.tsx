@@ -1,36 +1,29 @@
 import React, { useContext } from "react";
 import { observer } from "mobx-react-lite";
 import TodoItem from "./TodoItem";
-import FlipMove from "react-flip-move";
-import AppTaskStore from "../../../app/stores/appTaskStore";
-
-const animationSettings = {
-  duration: 350,
-  delay: 0,
-  easing: "ease",
-  enterAnimation: "accordionVertical" as any,
-  leaveAnimation: "accordionVertical" as any
-};
+import { RootStoreContext } from "../../../app/stores/rootStore";
+import { List, Segment } from "semantic-ui-react";
+import { colors } from "../../../app/common/styling/ColorPalette";
+import TodoAddTaskForm from "./TodoAddTaskForm";
 
 const TodoList = () => {
-  const appTaskStore = useContext(AppTaskStore);
-  const { todoTasksByOrder } = appTaskStore;
+  const rootStore = useContext(RootStoreContext);
+  const { todoTasksByOrder, loadingInitial } = rootStore.activityStore;
 
   return (
-    <FlipMove
-      typeName={null}
-      duration={animationSettings.duration}
-      delay={animationSettings.delay}
-      easing={animationSettings.easing}
-      enterAnimation={animationSettings.enterAnimation}
-      leaveAnimation={animationSettings.leaveAnimation}
+    <Segment
+      clearing
+      secondary
+      color={colors.positive}
+      loading={loadingInitial}
     >
-      {todoTasksByOrder.map(appTask => (
-        <div key={appTask.id}>
-          <TodoItem appTask={appTask} />
-        </div>
-      ))}
-    </FlipMove>
+      <List>
+        {todoTasksByOrder.map(appTask => (
+          <TodoItem appTask={appTask} key={appTask.id} />
+        ))}
+      </List>
+      <TodoAddTaskForm />
+    </Segment>
   );
 };
 

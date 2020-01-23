@@ -5,15 +5,14 @@ import { IAppTask } from "../../../app/models/appTask";
 import { Form as FinalForm, Field } from "react-final-form";
 import { TextInput } from "../../../app/common/form/TextInput";
 import { TextAreaInput } from "../../../app/common/form/TextAreaInput";
-import AppTaskStore from "../../../app/stores/appTaskStore";
+import { RootStoreContext } from "../../../app/stores/rootStore";
 
 const EditModal: React.FC<{ appTask: IAppTask; trigger: ReactNode }> = ({
   appTask,
   trigger
 }) => {
-  const appTaskStore = useContext(AppTaskStore);
-
-  const { editAppTask } = appTaskStore;
+  const rootStore = useContext(RootStoreContext);
+  const { editAppTask } = rootStore.activityStore;
 
   const handleFinalFormSubmit = (values: any) => {
     editAppTask({ ...appTask, ...values });

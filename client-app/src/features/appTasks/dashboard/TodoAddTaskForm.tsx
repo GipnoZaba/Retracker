@@ -1,16 +1,15 @@
 import React, { useContext, useState, FormEvent } from "react";
-import AppTaskStore from "../../../app/stores/appTaskStore";
 import { observer } from "mobx-react-lite";
 import { Button, Transition, Container, Form } from "semantic-ui-react";
 import { colors } from "../../../app/common/styling/ColorPalette";
-import "../../../app/layout/styles.css";
 import { IAppTask } from "../../../app/models/appTask";
 import uuid from "uuid";
+import { RootStoreContext } from "../../../app/stores/rootStore";
 
 const TodoAddTaskForm = () => {
-  const appTaskStore = useContext(AppTaskStore);
+  const rootStore = useContext(RootStoreContext);
 
-  const { createAppTask } = appTaskStore;
+  const { createAppTask } = rootStore.activityStore;
 
   const [isAddingTask, setIsAddingTask] = useState(false);
   const [newTask, setNewTask] = useState<IAppTask>({
