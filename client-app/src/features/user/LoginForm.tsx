@@ -7,8 +7,7 @@ import {
   Grid,
   Header,
   Segment,
-  Message,
-  Image
+  Message
 } from "semantic-ui-react";
 import { TextInput } from "../../app/common/form/TextInput";
 import { RootStoreContext } from "../../app/stores/rootStore";
@@ -84,9 +83,7 @@ export const LoginForm = () => {
                   loading={submitting}
                   positive
                   content="Login"
-                >
-                  Login
-                </Button>
+                />
               </Segment>
             </Form>
             <Message>

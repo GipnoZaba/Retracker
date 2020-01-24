@@ -1,15 +1,17 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
-namespace Domain
+namespace Application.AppTasks
 {
-    public class AppTask
+    public class AppTaskDto
     {
         public Guid Id { get; set; }
         public int OrderIndex { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public bool IsDone { get; set; }
-        public virtual ICollection<UserAppTask> UserAppTasks { get; set; }
+        [JsonPropertyName("members")]
+        public ICollection<MemberDto> UserAppTasks { get; set; }
     }
 }

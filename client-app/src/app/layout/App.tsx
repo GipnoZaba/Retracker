@@ -32,6 +32,7 @@ const App = () => {
   return (
     <Fragment>
       <ToastContainer position="bottom-right" />
+      <Route exact path="/" component={HomePage} />
       <Route exact path="/login" component={LoginForm} />
       <Route exact path="/register" component={RegisterForm} />
       <Route

@@ -1,19 +1,25 @@
 import React, { useContext, useState } from "react";
 import { observer } from "mobx-react-lite";
 import { IAppTask } from "../../../app/models/appTask";
-import { Button, List, Transition, Segment } from "semantic-ui-react";
+import { Button, List, Transition, Segment, Icon } from "semantic-ui-react";
 import { colors } from "../../../app/common/styling/ColorPalette";
 import { RootStoreContext } from "../../../app/stores/rootStore";
 
 const TodoItem: React.FC<{ appTask: IAppTask }> = ({ appTask }) => {
   const rootStore = useContext(RootStoreContext);
-  const { editAppTask, deleteAppTask, submitting } = rootStore.activityStore;
+  const {
+    completeAppTask,
+    restoreAppTask,
+    deleteAppTask,
+    submitting
+  } = rootStore.activityStore;
 
   const [hoverItemId, setHoverItemId] = useState("");
 
   return (
-    <List.Item>
+    <List.Item style={{ padding: "0 0 0 0" }}>
       <Segment
+        style={{ padding: "5px 5px 5px 5px" }}
         onMouseEnter={() => setHoverItemId(appTask.id)}
         onMouseLeave={() => setHoverItemId("")}
       >
@@ -26,11 +32,11 @@ const TodoItem: React.FC<{ appTask: IAppTask }> = ({ appTask }) => {
           onClick={
             appTask.isDone
               ? () => {
-                  editAppTask({ ...appTask, isDone: false });
+                  restoreAppTask(appTask.id);
                   setHoverItemId("");
                 }
               : () => {
-                  editAppTask({ ...appTask, isDone: true });
+                  completeAppTask(appTask.id);
                   setHoverItemId("");
                 }
           }
@@ -42,7 +48,7 @@ const TodoItem: React.FC<{ appTask: IAppTask }> = ({ appTask }) => {
           animation="scale"
           duration={0}
         >
-          <Button.Group floated="right">
+          <Button.Group floated="right" compact>
             <Button
               loading={submitting}
               inverted

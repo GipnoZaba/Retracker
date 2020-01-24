@@ -87,6 +87,48 @@ export default class AppTaskStore {
     }
   };
 
+  @action completeAppTask = async (id: string) => {
+    this.submitting = true;
+    try {
+      await agent.AppTasks.complete(id);
+
+      runInAction("completing task", () => {
+        var appTask: IAppTask | undefined = this.appTasksRegistry.get(id);
+        if (appTask) {
+          appTask.isDone = true;
+          this.appTasksRegistry.set(id, appTask);
+        }
+        this.submitting = false;
+      });
+    } catch (error) {
+      runInAction("comlete task error", () => {
+        this.submitting = false;
+      });
+      toast.error(this.messageErrorSubmit);
+    }
+  };
+
+  @action restoreAppTask = async (id: string) => {
+    this.submitting = true;
+    try {
+      await agent.AppTasks.restore(id);
+
+      runInAction("restoring task", () => {
+        var appTask: IAppTask | undefined = this.appTasksRegistry.get(id);
+        if (appTask) {
+          appTask.isDone = false;
+          this.appTasksRegistry.set(id, appTask);
+        }
+        this.submitting = false;
+      });
+    } catch (error) {
+      runInAction("restore task error", () => {
+        this.submitting = false;
+      });
+      toast.error(this.messageErrorSubmit);
+    }
+  };
+
   @action deleteAppTask = async (id: string) => {
     this.submitting = true;
     try {

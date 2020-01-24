@@ -13,12 +13,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Persistence;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using AutoMapper;
 
 namespace API
 {
@@ -34,35 +34,46 @@ namespace API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<DataContext>(opt => 
+            services.AddDbContext<DataContext>(opt =>
             {
+                opt.UseLazyLoadingProxies();
                 opt.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
             });
 
-             services.AddCors(opt =>
+            services.AddCors(opt =>
             {
-                opt.AddPolicy("CorsPolicy", policy =>
-                {
-                    policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000");
-                });
+               opt.AddPolicy("CorsPolicy", policy =>
+               {
+                   policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000");
+               });
             });
 
             services.AddMediatR(typeof(List.Handler).Assembly);
-
+            services.AddAutoMapper(typeof(List.Handler));
+            
             services.AddControllers(opt =>
             {
                 var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
                 opt.Filters.Add(new AuthorizeFilter(policy));
             })
-            .AddFluentValidation(cfg => 
+            .AddFluentValidation(cfg =>
             cfg.RegisterValidatorsFromAssemblyContaining<Create>())
             .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             services.AddDefaultIdentity<AppUser>().AddEntityFrameworkStores<DataContext>();
-            
+
+            services.AddAuthorization(opt => 
+            {
+                opt.AddPolicy("IsAppTaskCreator", policy => 
+                {
+                    policy.Requirements.Add(new IsCreatorRequirement());
+                });
+            });
+            services.AddTransient<IAuthorizationHandler, IsCreatorRequirementHandler>();
+
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["TokenKey"]));
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(opt => 
+            .AddJwtBearer(opt =>
             {
                 opt.TokenValidationParameters = new TokenValidationParameters
                 {
@@ -91,7 +102,7 @@ namespace API
             app.UseRouting();
 
             app.UseAuthorization();
-        
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

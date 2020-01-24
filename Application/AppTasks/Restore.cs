@@ -3,38 +3,44 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Errors;
-using Domain;
+using Application.Interfaces;
 using MediatR;
 using Persistence;
 
 namespace Application.AppTasks
 {
-    public class Mark
+    public class Restore
     {
         public class Command : IRequest
         {
             public Guid Id { get; set; }
-            public bool IsDone { get; set; }
         }
 
         public class Handler : IRequestHandler<Command>
         {
             private readonly DataContext _context;
-            public Handler(DataContext context)
+            private readonly IUserAccessor _userAccessor;
+            public Handler(DataContext context, IUserAccessor userAccessor)
             {
                 _context = context;
+                _userAccessor = userAccessor;
             }
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                AppTask appTask = await _context.AppTasks.FindAsync(request.Id);            
+                var appTask = await _context.AppTasks.FindAsync(request.Id);
 
                 if (appTask == null)
                 {
                     throw new RestException(HttpStatusCode.NotFound, new { Task = "Not found" });
+                } 
+                else if (!appTask.IsDone)
+                {
+                    throw new RestException(HttpStatusCode.BadRequest,
+                        new { Completeness = "Task was already completed" });
                 }
 
-                appTask.IsDone = request.IsDone;
+                appTask.IsDone = false;
 
                 var success = await _context.SaveChangesAsync() > 0;
 

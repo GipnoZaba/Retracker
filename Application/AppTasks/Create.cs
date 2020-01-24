@@ -6,6 +6,8 @@ using MediatR;
 using Persistence;
 using System.Linq;
 using FluentValidation;
+using Application.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.AppTasks
 {
@@ -28,21 +30,34 @@ namespace Application.AppTasks
         public class Handler : IRequestHandler<Command>
         {
             private readonly DataContext _context;
-            public Handler(DataContext context)
+            private readonly IUserAccessor _userAccessor;
+            public Handler(DataContext context, IUserAccessor userAccessor)
             {
                 _context = context;
+                _userAccessor = userAccessor;
             }
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                AppTask appTask = new AppTask 
+                AppTask appTask = new AppTask
                 {
                     Id = request.Id,
-                    OrderIndex = _context.AppTasks.Count(),
+                    OrderIndex = _context.UserAppTasks.Where(task => task.AppUser.UserName == _userAccessor.GetCurrentUsername()).Count(),
                     Title = request.Title
                 };
 
-                _context.Add(appTask);
+                _context.AppTasks.Add(appTask);
+
+                var user = await _context.Users.SingleOrDefaultAsync(x => x.UserName == _userAccessor.GetCurrentUsername());
+                var creator = new UserAppTask
+                {
+                    AppUser = user,
+                    AppTask = appTask,
+                    IsCreator = true
+                };
+
+                _context.UserAppTasks.Add(creator);
+
                 bool isSaved = await _context.SaveChangesAsync() > 0;
 
                 if (isSaved) return Unit.Value;

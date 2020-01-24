@@ -3,7 +3,6 @@ import { IAppTask } from "../models/appTask";
 import { toast } from "react-toastify";
 import { IUser, IUserFormValues } from "../models/user";
 import { history } from "../..";
-import { wait } from "@testing-library/react";
 
 axios.defaults.baseURL = "http://localhost:5000/api";
 
@@ -69,6 +68,11 @@ const requests = {
       .put(url, body)
       .then(sleep(1000))
       .then(responseBody),
+  patch: (url: string, body: {}) =>
+    axios
+      .patch(url, body)
+      .then(sleep(1000))
+      .then(responseBody),
   del: (url: string) =>
     axios
       .delete(url)
@@ -81,6 +85,8 @@ const AppTasks = {
   create: (appTask: IAppTask) => requests.post("/apptasks", appTask),
   details: (id: string) => requests.get(`/apptasks/${id}`),
   edit: (appTask: IAppTask) => requests.put(`/apptasks/${appTask.id}`, appTask),
+  complete: (id: string) => requests.patch(`/apptasks/${id}/complete`, {}),
+  restore: (id: string) => requests.patch(`/apptasks/${id}/restore`, {}),
   delete: (id: string) => requests.del(`/apptasks/${id}`)
 };
 
