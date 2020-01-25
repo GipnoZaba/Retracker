@@ -4,6 +4,7 @@ import { IAppTask } from "../../../app/models/appTask";
 import { Button, List, Transition, Segment } from "semantic-ui-react";
 import { colors } from "../../../app/common/styling/ColorPalette";
 import { RootStoreContext } from "../../../app/stores/rootStore";
+import EditTaskForm from "./EditTaskForm";
 
 const TodoItem: React.FC<{ appTask: IAppTask }> = ({ appTask }) => {
   const rootStore = useContext(RootStoreContext);
@@ -13,7 +14,7 @@ const TodoItem: React.FC<{ appTask: IAppTask }> = ({ appTask }) => {
     deleteAppTask,
     submitting
   } = rootStore.activityStore;
-
+  const { openModal } = rootStore.modalStore;
   const [hoverItemId, setHoverItemId] = useState("");
 
   return (
@@ -56,7 +57,10 @@ const TodoItem: React.FC<{ appTask: IAppTask }> = ({ appTask }) => {
               color={colors.positive}
               icon="edit"
               size="tiny"
-              onClick={() => setHoverItemId("")}
+              onClick={() => {
+                openModal(<EditTaskForm appTask={appTask} />);
+                setHoverItemId("");
+              }}
             />
             <Button
               loading={submitting}

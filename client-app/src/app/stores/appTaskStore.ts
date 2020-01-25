@@ -1,5 +1,5 @@
 import { observable, action, runInAction, computed } from "mobx";
-import { IAppTask } from "../models/appTask";
+import { IAppTask, IAppTaskFormValues } from "../models/appTask";
 import agent from "../api/agent";
 import { toast } from "react-toastify";
 import { RootStore } from "./rootStore";
@@ -59,13 +59,23 @@ export default class AppTaskStore {
     return appTasks.sort((a, b) => a.orderIndex - b.orderIndex);
   }
 
-  @action createAppTask = async (appTask: IAppTask) => {
+  @action createAppTask = async (formValues: IAppTaskFormValues) => {
     this.submitting = true;
     try {
-      await agent.AppTasks.create(appTask);
+      await agent.AppTasks.create(formValues);
 
       runInAction("create task", () => {
-        this.appTasksRegistry.set(appTask.id, appTask);
+        if (formValues.title) {
+          var appTask: IAppTask = {
+            id: formValues.id,
+            title: formValues.title,
+            orderIndex: this.appTasksRegistry.values.length,
+            description: "",
+            isDone: false
+          };
+          this.appTasksRegistry.set(appTask.id, appTask);
+        }
+
         this.submitting = false;
       });
     } catch (error) {
@@ -76,13 +86,25 @@ export default class AppTaskStore {
     }
   };
 
-  @action editAppTask = async (appTask: IAppTask) => {
+  @action editAppTask = async (formValues: IAppTaskFormValues) => {
     this.submitting = true;
     try {
-      await agent.AppTasks.edit(appTask);
+      if (this.isTaskChanged(formValues) == false) {
+        this.submitting = false;
+        this.rootStore.modalStore.closeModal();
+        return;
+      }
+
+      await agent.AppTasks.edit(formValues);
 
       runInAction("editing task", () => {
-        this.appTasksRegistry.set(appTask.id, appTask);
+        var appTask = this.appTasksRegistry.get(formValues.id);
+        if (appTask) {
+          appTask.title = formValues.title ?? appTask.title;
+          appTask.description = formValues.description ?? appTask.description;
+          this.appTasksRegistry.set(formValues.id, appTask);
+        }
+        this.rootStore.modalStore.closeModal();
         this.submitting = false;
       });
     } catch (error) {
@@ -151,6 +173,18 @@ export default class AppTaskStore {
       toast.error(this.messageErrorSubmit);
     }
   };
+
+  isTaskChanged(formValues: IAppTaskFormValues) {
+    var appTask = this.appTasksRegistry.get(formValues.id);
+
+    if (
+      formValues.title !== appTask?.title &&
+      formValues.description !== appTask?.description
+    )
+      return false;
+
+    return true;
+  }
 
   getTodoLength() {
     return Array.from(this.appTasksRegistry.values()).filter(

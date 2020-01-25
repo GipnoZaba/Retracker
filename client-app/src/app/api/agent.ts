@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import { IAppTask } from "../models/appTask";
+import { IAppTask, IAppTaskFormValues } from "../models/appTask";
 import { toast } from "react-toastify";
 import { IUser, IUserFormValues } from "../models/user";
 import { history } from "../..";
@@ -82,9 +82,9 @@ const requests = {
 
 const AppTasks = {
   list: (): Promise<IAppTask[]> => requests.get("/apptasks"),
-  create: (appTask: IAppTask) => requests.post("/apptasks", appTask),
+  create: (appTask: IAppTaskFormValues) => requests.post("/apptasks", appTask),
   details: (id: string) => requests.get(`/apptasks/${id}`),
-  edit: (appTask: IAppTask) => requests.put(`/apptasks/${appTask.id}`, appTask),
+  edit: (appTask: IAppTaskFormValues) => requests.put(`/apptasks/${appTask.id}`, appTask),
   complete: (id: string) => requests.patch(`/apptasks/${id}/complete`, {}),
   restore: (id: string) => requests.patch(`/apptasks/${id}/restore`, {}),
   delete: (id: string) => requests.del(`/apptasks/${id}`)

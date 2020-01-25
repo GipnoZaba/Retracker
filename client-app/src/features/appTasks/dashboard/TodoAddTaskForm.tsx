@@ -2,7 +2,7 @@ import React, { useContext, useState, FormEvent } from "react";
 import { observer } from "mobx-react-lite";
 import { Button, Transition, Container, Form } from "semantic-ui-react";
 import { colors } from "../../../app/common/styling/ColorPalette";
-import { IAppTask } from "../../../app/models/appTask";
+import { IAppTask, IAppTaskFormValues } from "../../../app/models/appTask";
 import uuid from "uuid";
 import { RootStoreContext } from "../../../app/stores/rootStore";
 
@@ -12,32 +12,29 @@ const TodoAddTaskForm = () => {
   const { createAppTask } = rootStore.activityStore;
 
   const [isAddingTask, setIsAddingTask] = useState(false);
-  const [newTask, setNewTask] = useState<IAppTask>({
-    id: uuid(),
-    orderIndex: 0,
-    title: ""
+  const [formValues, setFormValues] = useState<IAppTaskFormValues>({
+    id: uuid()
   });
 
-  const handleNewTaskChange = (
+  const handleformValuesChange = (
     event: FormEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = event.currentTarget;
-    setNewTask({ ...newTask, [name]: value });
+    setFormValues({ ...formValues, [name]: value });
   };
 
   const handleSubmit = () => {
     setIsAddingTask(false);
 
-    if (newTask.title.trim() === "") {
-      newTask.title = "";
+    if (formValues.title && formValues.title.trim() === "") {
+      formValues.title = "";
       return;
     }
 
-    createAppTask(newTask);
+    createAppTask(formValues);
 
-    setNewTask({
+    setFormValues({
       id: uuid(),
-      orderIndex: 0,
       title: ""
     });
   };
@@ -66,8 +63,8 @@ const TodoAddTaskForm = () => {
             fluid
             name="title"
             placeholder="Add new task"
-            value={newTask.title}
-            onChange={handleNewTaskChange}
+            value={formValues.title}
+            onChange={handleformValuesChange}
           />
           <Button.Group floated="left">
             <Button
@@ -83,7 +80,7 @@ const TodoAddTaskForm = () => {
               color={colors.negative}
               onClick={() => {
                 setIsAddingTask(false);
-                setNewTask({ ...newTask, title: "" });
+                setFormValues({ ...formValues, title: "" });
               }}
             />
           </Button.Group>
