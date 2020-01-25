@@ -10,6 +10,12 @@ export default class AppTaskStore {
     this.rootStore = rootStore;
   }
 
+  reset() {
+    this.appTasksRegistry.clear();
+    this.loadingInitial = false;
+    this.submitting = false;
+  }
+
   messageErrorSubmit = "Problem submitting data";
   messageErrorRetrieve = "Problem retrieving data";
 

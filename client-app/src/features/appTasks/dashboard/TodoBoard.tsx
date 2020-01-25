@@ -23,11 +23,11 @@ const TodoBoard = () => {
     <Segment attached>
       <Grid stackable>
         <Grid.Column width={8}>
-          <Header as="h2" content="Today" />
+          <Header as="h2" content="Todo" />
           <TodoList />
         </Grid.Column>
         <Grid.Column width={8}>
-          <Header as="h2" content="Today" />
+          <Header as="h2" content="Done" />
           <Segment clearing secondary color={colors.positive}>
             <DoneList />
           </Segment>

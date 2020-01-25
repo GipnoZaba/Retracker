@@ -27,11 +27,7 @@ namespace Infrastructure.Security
         {
             if (context.Resource is AuthorizationFilterContext authContext)
             {
-                var currentUserName = _httpContextAccessor.HttpContext
-                    .User?
-                    .Claims?
-                    .SingleOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?
-                    .Value;
+                var currentUserName = _httpContextAccessor.HttpContext.User?.Claims?.SingleOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
 
                 var appTaskId = Guid.Parse(authContext.RouteData.Values["id"].ToString());
 
@@ -43,11 +39,12 @@ namespace Infrastructure.Security
                 {
                     context.Succeed(requirement);
                 }
-                else
-                {
-                    context.Fail();
-                }
             }
+            else 
+            {
+                context.Fail();
+            }
+
             return Task.CompletedTask;
         }
     }

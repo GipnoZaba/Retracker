@@ -1,16 +1,43 @@
-import React, { useContext } from "react";
-import { Segment, Button } from "semantic-ui-react";
-import { LoginForm } from "../user/LoginForm";
+import React, { useContext, Fragment } from "react";
+import { Segment, Button, Container, Header } from "semantic-ui-react";
 import { RootStoreContext } from "../../app/stores/rootStore";
+import { observer } from "mobx-react-lite";
+import RegisterForm from "../user/RegisterForm";
+import LoginForm from "../user/LoginForm";
 
-export const HomePage = () => {
+const HomePage = () => {
   const rootStore = useContext(RootStoreContext);
-  const { logout } = rootStore.userStore;
-  
+  const { logout, isLoggedIn } = rootStore.userStore;
+  const { openModal } = rootStore.modalStore;
+
   return (
-    <Segment>
-      <LoginForm />
-      <Button onClick={logout} content="Logout" />
+    <Segment inverted textAlign="center" vertical>
+      <Container>
+        <Header as="h1" inverted content="Retracker" />
+        <Fragment>
+          <Header as="h2" inverted content="Welcome to Retracker" />
+          {isLoggedIn ? (
+            <Button onClick={logout} size="huge" inverted content="Logout" />
+          ) : (
+            <Fragment>
+              <Button
+                onClick={() => openModal(<LoginForm />)}
+                size="huge"
+                inverted
+                content="Login"
+              />
+              <Button
+                onClick={() => openModal(<RegisterForm />)}
+                size="huge"
+                inverted
+                content="Register"
+              />
+            </Fragment>
+          )}
+        </Fragment>
+      </Container>
     </Segment>
   );
 };
+
+export default observer(HomePage);

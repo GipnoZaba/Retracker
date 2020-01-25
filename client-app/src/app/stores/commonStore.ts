@@ -18,6 +18,10 @@ export default class CommonStore {
     );
   }
 
+  reset() {
+    this.setToken(null);
+  }
+
   @observable token: string | null = window.localStorage.getItem("jwt");
   @observable appLoaded = false;
 

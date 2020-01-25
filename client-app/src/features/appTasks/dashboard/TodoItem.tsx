@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { observer } from "mobx-react-lite";
 import { IAppTask } from "../../../app/models/appTask";
-import { Button, List, Transition, Segment, Icon } from "semantic-ui-react";
+import { Button, List, Transition, Segment } from "semantic-ui-react";
 import { colors } from "../../../app/common/styling/ColorPalette";
 import { RootStoreContext } from "../../../app/stores/rootStore";
 

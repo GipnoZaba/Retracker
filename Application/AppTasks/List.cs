@@ -32,7 +32,8 @@ namespace Application.AppTasks
                 var queryable = _context.AppTasks
                     .AsQueryable();
 
-                queryable = queryable.Where(x => x.UserAppTasks.Any(a => a.AppUser.UserName == _userAccessor.GetCurrentUsername()));
+                queryable = queryable.Where(x => x.UserAppTasks
+                    .Any(a => a.AppUser.UserName == _userAccessor.GetCurrentUsername()));
 
                 return _mapper.Map<List<AppTask>, List<AppTaskDto>>(await queryable.ToListAsync());
             }

@@ -10,6 +10,7 @@ using Persistence;
 
 namespace API.Controllers
 {
+    [Authorize]
     public class AppTasksController : BaseController
     {
         private readonly DataContext _context;
@@ -31,14 +32,12 @@ namespace API.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize]
         public async Task<ActionResult<AppTask>> Details(Guid id)
         {
             return await Mediator.Send(new Details.Query{ Id = id });
         }
 
         [HttpPut("{id}")]
-        [Authorize(Policy = "IsAppTaskCreator")]
         public async Task<ActionResult<Unit>> Edit(Guid id, Edit.Command command)
         {
             command.Id = id;
@@ -46,21 +45,18 @@ namespace API.Controllers
         }
 
         [HttpPatch("{id}/complete")]
-        [Authorize(Policy = "IsAppTaskCreator")]
         public async Task<ActionResult<Unit>> Complete(Guid id)
         {
             return await Mediator.Send(new Complete.Command{ Id = id });
         }
 
         [HttpPatch("{id}/restore")]
-        [Authorize(Policy = "IsAppTaskCreator")]
         public async Task<ActionResult<Unit>> Restore(Guid id)
         {
             return await Mediator.Send(new Restore.Command{ Id = id });
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Policy = "IsAppTaskCreator")]
         public async Task<ActionResult<Unit>> Delete(Guid id)
         {
             return await Mediator.Send(new Delete.Command{ Id = id });

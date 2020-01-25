@@ -14,13 +14,14 @@ import { RootStoreContext } from "../../app/stores/rootStore";
 import { IUserFormValues } from "../../app/models/user";
 import { FORM_ERROR } from "final-form";
 import { combineValidators, isRequired } from "revalidate";
+import { observer } from "mobx-react-lite";
 
 const validate = combineValidators({
   email: isRequired("email"),
   password: isRequired("password")
 });
 
-export const LoginForm = () => {
+const LoginForm = () => {
   const rootStore = useContext(RootStoreContext);
   const { login } = rootStore.userStore;
 
@@ -95,3 +96,5 @@ export const LoginForm = () => {
     />
   );
 };
+
+export default observer(LoginForm);

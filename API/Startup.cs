@@ -56,9 +56,9 @@ namespace API
                 var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
                 opt.Filters.Add(new AuthorizeFilter(policy));
             })
-            .AddFluentValidation(cfg =>
-            cfg.RegisterValidatorsFromAssemblyContaining<Create>())
-            .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+                .AddFluentValidation(cfg =>
+                    cfg.RegisterValidatorsFromAssemblyContaining<Create>())
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             services.AddDefaultIdentity<AppUser>().AddEntityFrameworkStores<DataContext>();
 

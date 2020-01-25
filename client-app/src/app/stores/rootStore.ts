@@ -19,6 +19,13 @@ export class RootStore {
     this.commonStore = new CommonStore(this);
     this.modalStore = new ModalStore(this);
   }
+
+  reset = () => {
+    this.activityStore.reset();
+    this.userStore.reset();
+    this.commonStore.reset();
+    this.modalStore.reset();
+  }
 }
 
 export const RootStoreContext = createContext(new RootStore());
