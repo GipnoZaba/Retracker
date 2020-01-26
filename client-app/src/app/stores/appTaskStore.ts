@@ -62,6 +62,7 @@ export default class AppTaskStore {
   @action createAppTask = async (formValues: IAppTaskFormValues) => {
     this.submitting = true;
     try {
+      formValues.date = new Date();
       await agent.AppTasks.create(formValues);
 
       runInAction("create task", () => {
@@ -71,6 +72,7 @@ export default class AppTaskStore {
             title: formValues.title,
             orderIndex: this.appTasksRegistry.values.length,
             description: "",
+            date: formValues.date ?? new Date(),
             isDone: false
           };
           this.appTasksRegistry.set(appTask.id, appTask);
