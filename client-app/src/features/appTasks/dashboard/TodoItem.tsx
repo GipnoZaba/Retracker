@@ -17,9 +17,9 @@ const TodoItem: React.FC<{ appTask: IAppTask }> = ({ appTask }) => {
   const [hoverItemId, setHoverItemId] = useState("");
 
   return (
-    <List.Item style={{ padding: "0 0 0 0" }}>
+    <List.Item className="p-0">
       <Segment
-        style={{ padding: "5px 5px 5px 5px" }}
+        className="p-2"
         onMouseEnter={() => setHoverItemId(appTask.id)}
         onMouseLeave={() => setHoverItemId("")}
       >

@@ -4,6 +4,7 @@ import { RootStoreContext } from "../../app/stores/rootStore";
 import { observer } from "mobx-react-lite";
 import RegisterForm from "../user/RegisterForm";
 import LoginForm from "../user/LoginForm";
+import { Link } from "react-router-dom";
 
 const HomePage = () => {
   const rootStore = useContext(RootStoreContext);
@@ -17,7 +18,16 @@ const HomePage = () => {
         <Fragment>
           <Header as="h2" inverted content="Welcome to Retracker" />
           {isLoggedIn ? (
-            <Button onClick={logout} size="huge" inverted content="Logout" />
+            <Fragment>
+              <Button
+                as={Link}
+                to="/today"
+                size="huge"
+                inverted
+                content="Open tasks"
+              />
+              <Button onClick={logout} size="huge" inverted content="Logout" />
+            </Fragment>
           ) : (
             <Fragment>
               <Button

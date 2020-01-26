@@ -3,7 +3,6 @@ import SideBar from "../../features/nav/SideBar";
 import TodoBoard from "../../features/appTasks/dashboard/TodoBoard";
 import { observer } from "mobx-react-lite";
 import { Route, Switch } from "react-router-dom";
-import "../layout/styles.css";
 import { RootStoreContext } from "../stores/rootStore";
 import RegisterForm from "../../features/user/RegisterForm";
 import LoadingComponent from "./LoadingComponent";

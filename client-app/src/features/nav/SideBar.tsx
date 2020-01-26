@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 import { Menu, Icon, Button } from "semantic-ui-react";
 import { NavLink } from "react-router-dom";
-import "../../app/layout/styles.css";
 import { RootStoreContext } from "../../app/stores/rootStore";
 
 const menuStyle = {
