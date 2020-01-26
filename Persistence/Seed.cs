@@ -86,6 +86,11 @@ namespace Persistence
                             {
                                 AppUserId = "a",
                                 IsCreator = true
+                            },
+                            new UserAppTask
+                            {
+                                AppUserId = "b",
+                                IsCreator = false
                             }
                         }
                     },

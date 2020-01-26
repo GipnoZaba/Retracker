@@ -38,6 +38,7 @@ namespace API.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Policy = "IsAppTaskCreator")]
         public async Task<ActionResult<Unit>> Edit(Guid id, Edit.Command command)
         {
             command.Id = id;
@@ -45,12 +46,14 @@ namespace API.Controllers
         }
 
         [HttpPatch("{id}/complete")]
+        [Authorize(Policy = "IsAppTaskCreator")]
         public async Task<ActionResult<Unit>> Complete(Guid id)
         {
             return await Mediator.Send(new Complete.Command{ Id = id });
         }
 
         [HttpPatch("{id}/restore")]
+        [Authorize(Policy = "IsAppTaskCreator")]
         public async Task<ActionResult<Unit>> Restore(Guid id)
         {
             return await Mediator.Send(new Restore.Command{ Id = id });
