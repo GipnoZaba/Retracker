@@ -89,7 +89,7 @@ export default class AppTaskStore {
   @action editAppTask = async (formValues: IAppTaskFormValues) => {
     this.submitting = true;
     try {
-      if (this.isTaskChanged(formValues) == false) {
+      if (this.isTaskChanged(formValues) === false) {
         this.submitting = false;
         this.rootStore.modalStore.closeModal();
         return;

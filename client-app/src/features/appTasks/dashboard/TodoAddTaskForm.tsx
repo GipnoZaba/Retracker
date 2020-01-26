@@ -1,10 +1,11 @@
-import React, { useContext, useState, FormEvent } from "react";
+import React, { useContext, useState, FormEvent, useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import { Button, Transition, Container, Form } from "semantic-ui-react";
 import { colors } from "../../../app/common/styling/ColorPalette";
-import { IAppTask, IAppTaskFormValues } from "../../../app/models/appTask";
+import { IAppTaskFormValues } from "../../../app/models/appTask";
 import uuid from "uuid";
 import { RootStoreContext } from "../../../app/stores/rootStore";
+import { focusOnElementById } from "../../../app/common/utils/utilities";
 
 const TodoAddTaskForm = () => {
   const rootStore = useContext(RootStoreContext);
@@ -13,7 +14,8 @@ const TodoAddTaskForm = () => {
 
   const [isAddingTask, setIsAddingTask] = useState(false);
   const [formValues, setFormValues] = useState<IAppTaskFormValues>({
-    id: uuid()
+    id: uuid(),
+    title: ""
   });
 
   const handleformValuesChange = (
@@ -24,10 +26,12 @@ const TodoAddTaskForm = () => {
   };
 
   const handleSubmit = () => {
-    setIsAddingTask(false);
-
-    if (formValues.title && formValues.title.trim() === "") {
-      formValues.title = "";
+    if (
+      !formValues.title ||
+      (formValues.title && formValues.title.trim() === "")
+    ) {
+      setIsAddingTask(false);
+      setFormValues({ ...formValues, title: "" });
       return;
     }
 
@@ -37,6 +41,8 @@ const TodoAddTaskForm = () => {
       id: uuid(),
       title: ""
     });
+
+    focusOnElementById("inputTitle", document);
   };
 
   return (
@@ -53,13 +59,15 @@ const TodoAddTaskForm = () => {
         </div>
       </Transition>
       <Transition
+        onStart={() => focusOnElementById("titleInput", document)}
         fluid
         visible={isAddingTask}
         animation="slide down"
         duration={{ hide: 0, show: 300 }}
       >
-        <Container>
+        <Form>
           <Form.Input
+            id="titleInput"
             fluid
             name="title"
             placeholder="Add new task"
@@ -84,7 +92,7 @@ const TodoAddTaskForm = () => {
               }}
             />
           </Button.Group>
-        </Container>
+        </Form>
       </Transition>
     </Container>
   );

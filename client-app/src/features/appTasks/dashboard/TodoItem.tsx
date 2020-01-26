@@ -11,8 +11,7 @@ const TodoItem: React.FC<{ appTask: IAppTask }> = ({ appTask }) => {
   const {
     completeAppTask,
     restoreAppTask,
-    deleteAppTask,
-    submitting
+    deleteAppTask
   } = rootStore.activityStore;
   const { openModal } = rootStore.modalStore;
   const [hoverItemId, setHoverItemId] = useState("");
@@ -25,7 +24,6 @@ const TodoItem: React.FC<{ appTask: IAppTask }> = ({ appTask }) => {
         onMouseLeave={() => setHoverItemId("")}
       >
         <Button
-          loading={submitting}
           inverted
           icon={appTask.isDone ? "undo" : "check"}
           color={appTask.isDone ? colors.negative : colors.positive}
@@ -51,7 +49,6 @@ const TodoItem: React.FC<{ appTask: IAppTask }> = ({ appTask }) => {
         >
           <Button.Group floated="right" compact>
             <Button
-              loading={submitting}
               inverted
               disabled={appTask.isDone}
               color={colors.positive}
@@ -63,7 +60,6 @@ const TodoItem: React.FC<{ appTask: IAppTask }> = ({ appTask }) => {
               }}
             />
             <Button
-              loading={submitting}
               inverted
               disabled={appTask.isDone}
               icon="ban"

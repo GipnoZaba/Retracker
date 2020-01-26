@@ -6,10 +6,15 @@ import { Form as FinalForm, Field } from "react-final-form";
 import { TextInput } from "../../../app/common/form/TextInput";
 import { TextAreaInput } from "../../../app/common/form/TextAreaInput";
 import { RootStoreContext } from "../../../app/stores/rootStore";
+import { combineValidators, isRequired } from "revalidate";
 
 const EditTaskForm: React.FC<{ appTask: IAppTask }> = ({ appTask }) => {
   const rootStore = useContext(RootStoreContext);
   const { editAppTask, submitting } = rootStore.activityStore;
+
+  const validate = combineValidators({
+    title: isRequired({ message: "The title is required" })
+  });
 
   const handleFinalFormSubmit = (values: IAppTaskFormValues) => {
     editAppTask({ ...appTask, ...values });
@@ -19,6 +24,7 @@ const EditTaskForm: React.FC<{ appTask: IAppTask }> = ({ appTask }) => {
     <Segment clearing>
       <FinalForm
         initialValues={appTask}
+        validate={validate}
         onSubmit={handleFinalFormSubmit}
         render={({ handleSubmit, invalid, pristine }) => (
           <Form onSubmit={handleSubmit}>
