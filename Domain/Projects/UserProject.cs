@@ -1,11 +1,11 @@
 using System;
 
-namespace Domain
+namespace Domain.Projects
 {
-    public class UserAppTask
+    public class UserProject
     {
-        public Guid AppTaskId { get; set; }
-        public virtual AppTask AppTask { get; set; }
+        public Guid ProjectId { get; set; }
+        public virtual Project Project { get; set; }
         public string AppUserId { get; set; }
         public virtual AppUser AppUser { get; set; }
         public bool IsCreator { get; set; }

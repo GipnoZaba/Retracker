@@ -11,6 +11,15 @@ namespace Persistence
     {
         public static async Task SeedData(DataContext context, UserManager<AppUser> userManager)
         {
+            await SeedUsers(userManager);
+            var appTasks = GetSeededTasks(context);
+
+            context.AddRange(appTasks);
+            context.SaveChanges();
+        }
+
+        private async static Task SeedUsers(UserManager<AppUser> userManager)
+        {
             if (userManager.Users.Any() == false)
             {
                 var users = new List<AppUser>
@@ -42,7 +51,10 @@ namespace Persistence
                     await userManager.CreateAsync(user, "Pa$$w0rd");
                 }
             }
+        }
 
+        private static List<AppTask> GetSeededTasks(DataContext context)
+        {
             if (context.AppTasks.Any() == false)
             {
                 var appTasks = new List<AppTask>
@@ -123,10 +135,9 @@ namespace Persistence
                         }
                     }
                 };
-
-                context.AddRange(appTasks);
-                context.SaveChanges();
+                return appTasks;
             }
+            return null;
         }
     }
 }

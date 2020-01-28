@@ -41,7 +41,7 @@ const TodoItem: React.FC<{ appTask: IAppTask }> = ({ appTask }) => {
           }
         />
 
-        <big className="paddingLeft small">{appTask.title}</big>
+        <big className="pl-3">{appTask.title}</big>
         <Transition
           visible={hoverItemId === appTask.id}
           animation="scale"
