@@ -16,7 +16,7 @@ namespace Application.AppTasks
             public Guid Id { get; set; }
             public string Title { get; set; }
             public string Description { get; set; }
-            public DateTime? Date { get; set; }
+            public DateTime? DateCreated { get; set; }
         }
 
         public class Handler : IRequestHandler<Command>
@@ -38,7 +38,7 @@ namespace Application.AppTasks
 
                 appTask.Title = request.Title ?? appTask.Title;
                 appTask.Description = request.Description ?? appTask.Description;
-                appTask.Date = request.Date ?? appTask.Date;
+                appTask.DateCreated = request.DateCreated ?? appTask.DateCreated;
 
                 bool isSaved = await _context.SaveChangesAsync() > 0;
 

@@ -3,6 +3,7 @@ import { IAppTask, IAppTaskFormValues } from "../models/appTask";
 import { toast } from "react-toastify";
 import { IUser, IUserFormValues } from "../models/user";
 import { history } from "../..";
+import { IProject, IProjectFormValues } from "../models/project";
 
 axios.defaults.baseURL = "http://localhost:5000/api";
 
@@ -62,6 +63,14 @@ const requests = {
   del: (url: string) => axios.delete(url).then(responseBody)
 };
 
+const User = {
+  register: (user: IUserFormValues): Promise<IUser> =>
+    requests.post(`/users/register`, user),
+  login: (user: IUserFormValues): Promise<IUser> =>
+    requests.post(`/users/login`, user),
+  current: (): Promise<IUser> => requests.get("/users")
+};
+
 const AppTasks = {
   list: (): Promise<IAppTask[]> => requests.get("/apptasks"),
   create: (appTask: IAppTaskFormValues) => requests.post("/apptasks", appTask),
@@ -73,15 +82,17 @@ const AppTasks = {
   delete: (id: string) => requests.del(`/apptasks/${id}`)
 };
 
-const User = {
-  register: (user: IUserFormValues): Promise<IUser> =>
-    requests.post(`/users/register`, user),
-  login: (user: IUserFormValues): Promise<IUser> =>
-    requests.post(`/users/login`, user),
-  current: (): Promise<IUser> => requests.get("/users")
+const Projects = {
+  list: (): Promise<IProject[]> => requests.get("/projects"),
+  create: (project: IProjectFormValues) => requests.post("/projects", project),
+  details: (id: string) => requests.get(`/projects/${id}`),
+  edit: (project: IProjectFormValues) =>
+    requests.put(`/apptasks/${project.id}`, project),
+  delete: (id: string) => requests.del(`/projects/${id}`)
 };
 
 export default {
   AppTasks,
-  User
+  User,
+  Projects
 };

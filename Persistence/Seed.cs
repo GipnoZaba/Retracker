@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Domain;
+using Domain.Projects;
 using Microsoft.AspNetCore.Identity;
 
 namespace Persistence
@@ -13,8 +14,10 @@ namespace Persistence
         {
             await SeedUsers(userManager);
             var appTasks = GetSeededTasks(context);
+            var projects = GetSeededProjects(context);
 
             context.AddRange(appTasks);
+            context.AddRange(projects);
             context.SaveChanges();
         }
 
@@ -137,7 +140,76 @@ namespace Persistence
                 };
                 return appTasks;
             }
-            return null;
+            return new List<AppTask>();
+        }
+
+        private static List<Project> GetSeededProjects(DataContext context)
+        {
+            if (context.Projects.Any() == false)
+            {
+                var projects = new List<Project>
+                {
+                    new Project
+                    {
+                        Title = "Retracker",
+                        Description = "Planner, todo list and other lists",
+                        DateCreated = DateTime.Today,
+                        UserProjects = new List<UserProject>
+                        {
+                            new UserProject
+                            {
+                                AppUserId = "a",
+                                IsCreator = true
+                            },
+                            new UserProject
+                            {
+                                AppUserId = "b",
+                                IsCreator  = false
+                            },
+                            new UserProject
+                            {
+                                AppUserId = "c",
+                                IsCreator  = false
+                            }
+                        },
+                        Lists = new List<ProjectList>
+                        {
+                            new ProjectList
+                            {
+                                Tasks = new List<ProjectTask>
+                                {
+                                    new ProjectTask
+                                    {
+                                        Title = "Task1"
+                                    },
+                                    new ProjectTask
+                                    {
+                                        Title = "Task2"
+                                    },
+                                    new ProjectTask
+                                    {
+                                        Title = "Task3"
+                                    },
+                                    new ProjectTask
+                                    {
+                                        Title = "Task4"
+                                    },
+                                    new ProjectTask
+                                    {
+                                        Title = "Task5"
+                                    },
+                                    new ProjectTask
+                                    {
+                                        Title = "Task6"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                };
+                return projects;
+            }
+            return new List<Project>();
         }
     }
 }

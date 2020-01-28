@@ -17,7 +17,7 @@ namespace Application.AppTasks
         {
             public Guid Id { get; set; }
             public string Title { get; set; }
-            public DateTime Date { get; set; }
+            public DateTime DateCreated { get; set; }
         }
 
         public class CommandValidator : AbstractValidator<Command>
@@ -45,7 +45,7 @@ namespace Application.AppTasks
                     Id = request.Id,
                     OrderIndex = _context.UserAppTasks.Where(task => task.AppUser.UserName == _userAccessor.GetCurrentUsername()).Count(),
                     Title = request.Title,
-                    Date = request.Date
+                    DateCreated = request.DateCreated
                 };
 
                 _context.AppTasks.Add(appTask);

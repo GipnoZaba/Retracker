@@ -3,6 +3,10 @@ import { IAppTask, IAppTaskFormValues } from "../models/appTask";
 import agent from "../api/agent";
 import { toast } from "react-toastify";
 import { RootStore } from "./rootStore";
+import {
+  messageErrorRetrieve,
+  messageErrorSubmit
+} from "../common/utils/utilities";
 
 export default class AppTaskStore {
   rootStore: RootStore;
@@ -15,9 +19,6 @@ export default class AppTaskStore {
     this.loadingInitial = false;
     this.submitting = false;
   }
-
-  messageErrorSubmit = "Problem submitting data";
-  messageErrorRetrieve = "Problem retrieving data";
 
   @observable appTasksRegistry = new Map<string, IAppTask>();
   @observable loadingInitial = false;
@@ -39,7 +40,7 @@ export default class AppTaskStore {
       runInAction("load tasks error", () => {
         this.loadingInitial = false;
       });
-      toast.error(this.messageErrorRetrieve);
+      toast.error(messageErrorRetrieve);
     }
   };
 
@@ -84,7 +85,7 @@ export default class AppTaskStore {
       runInAction("create task error", () => {
         this.submitting = false;
       });
-      toast.error(this.messageErrorSubmit);
+      toast.error(messageErrorSubmit);
     }
   };
 
@@ -113,7 +114,7 @@ export default class AppTaskStore {
       runInAction("edit task error", () => {
         this.submitting = false;
       });
-      toast.error(this.messageErrorSubmit);
+      toast.error(messageErrorSubmit);
     }
   };
 
@@ -134,7 +135,7 @@ export default class AppTaskStore {
       runInAction("comlete task error", () => {
         this.submitting = false;
       });
-      toast.error(this.messageErrorSubmit);
+      toast.error(messageErrorSubmit);
     }
   };
 
@@ -155,7 +156,7 @@ export default class AppTaskStore {
       runInAction("restore task error", () => {
         this.submitting = false;
       });
-      toast.error(this.messageErrorSubmit);
+      toast.error(messageErrorSubmit);
     }
   };
 
@@ -172,7 +173,7 @@ export default class AppTaskStore {
       runInAction("delete task error", () => {
         this.submitting = false;
       });
-      toast.error(this.messageErrorSubmit);
+      toast.error(messageErrorSubmit);
     }
   };
 
