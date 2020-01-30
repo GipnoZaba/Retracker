@@ -4,8 +4,9 @@ import { toast } from "react-toastify";
 import { RootStore } from "./rootStore";
 import { IProject } from "../models/project";
 import { messageErrorRetrieve } from "../common/utils/utilities";
+import { IStore } from "./store";
 
-export default class ProjectStore {
+export default class ProjectStore implements IStore {
   rootStore: RootStore;
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;

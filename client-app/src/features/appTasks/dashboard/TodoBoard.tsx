@@ -8,12 +8,16 @@ import { RootStoreContext } from "../../../app/stores/rootStore";
 
 const TodoBoard = () => {
   const rootStore = useContext(RootStoreContext);
-  const { loadAppTasks } = rootStore.activityStore;
+  const { loadAppTasks, reset, appTasksRegistryKey } = rootStore.activityStore;
   const { isLoggedIn } = rootStore.userStore;
 
   useEffect(() => {
     loadAppTasks();
-  }, [loadAppTasks]);
+
+    window.onbeforeunload = function() {
+      window.localStorage.removeItem(appTasksRegistryKey);
+    };
+  }, [loadAppTasks, reset]);
 
   if (isLoggedIn === false) {
     return <Label content="Not logged in" />;

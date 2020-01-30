@@ -1,4 +1,4 @@
-import { observable, action, runInAction, computed } from "mobx";
+import { observable, action, runInAction, computed, reaction } from "mobx";
 import { IAppTask, IAppTaskFormValues } from "../models/appTask";
 import agent from "../api/agent";
 import { toast } from "react-toastify";
@@ -7,11 +7,27 @@ import {
   messageErrorRetrieve,
   messageErrorSubmit
 } from "../common/utils/utilities";
+import { IStore } from "./store";
 
-export default class AppTaskStore {
+export default class AppTaskStore implements IStore {
   rootStore: RootStore;
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
+
+    reaction(
+      () => this.appTasksRegistry,
+      appTasksRegistry => {
+        console.log(appTasksRegistry.values.length);
+        if (appTasksRegistry.values.length > 0) {
+          window.localStorage.setItem(
+            this.appTasksRegistryKey,
+            JSON.stringify(appTasksRegistry)
+          );
+        } else {
+          window.localStorage.removeItem(this.appTasksRegistryKey);
+        }
+      }
+    );
   }
 
   reset() {
@@ -20,12 +36,21 @@ export default class AppTaskStore {
     this.submitting = false;
   }
 
+  appTasksRegistryKey = "appTasksRegistryKey";
+
   @observable appTasksRegistry = new Map<string, IAppTask>();
   @observable loadingInitial = false;
   @observable submitting = false;
 
   @action loadAppTasks = async () => {
+    this.appTasksRegistry.clear();
     this.loadingInitial = true;
+
+    if (window.localStorage.getItem(this.appTasksRegistryKey) !== null) {
+      this.setAppTasksRegistryFromJson();
+      return;
+    }
+
     try {
       const appTasks = await agent.AppTasks.list();
 
@@ -33,6 +58,11 @@ export default class AppTaskStore {
         appTasks.forEach(appTask => {
           this.appTasksRegistry.set(appTask.id, appTask);
         });
+
+        window.localStorage.setItem(
+          this.appTasksRegistryKey,
+          JSON.stringify(this.appTasksRegistry)
+        );
 
         this.loadingInitial = false;
       });
@@ -92,12 +122,6 @@ export default class AppTaskStore {
   @action editAppTask = async (formValues: IAppTaskFormValues) => {
     this.submitting = true;
     try {
-      if (this.isTaskChanged(formValues) === false) {
-        this.submitting = false;
-        this.rootStore.modalStore.closeModal();
-        return;
-      }
-
       await agent.AppTasks.edit(formValues);
 
       runInAction("editing task", () => {
@@ -177,16 +201,16 @@ export default class AppTaskStore {
     }
   };
 
-  isTaskChanged(formValues: IAppTaskFormValues) {
-    var appTask = this.appTasksRegistry.get(formValues.id);
-
-    if (
-      formValues.title !== appTask?.title &&
-      formValues.description !== appTask?.description
-    )
-      return false;
-
-    return true;
+  setAppTasksRegistryFromJson() {
+    let json = window.localStorage.getItem(this.appTasksRegistryKey);
+    if (json) {
+      this.appTasksRegistry.clear();
+      let mapObject = JSON.parse(json);
+      Object.keys(mapObject).forEach(key => {
+        this.appTasksRegistry.set(key, mapObject[key]);
+      });
+    }
+    this.loadingInitial = false;
   }
 
   getTodoLength() {

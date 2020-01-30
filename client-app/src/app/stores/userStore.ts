@@ -3,8 +3,9 @@ import { IUserFormValues, IUser } from "../models/user";
 import agent from "../api/agent";
 import { RootStore } from "./rootStore";
 import { history } from "../..";
+import { IStore } from "./store";
 
-export default class UserStore {
+export default class UserStore implements IStore {
   rootStore: RootStore;
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;

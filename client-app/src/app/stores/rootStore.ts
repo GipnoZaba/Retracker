@@ -5,10 +5,11 @@ import { configure } from "mobx";
 import CommonStore from "./commonStore";
 import ModalStore from "./modalStore";
 import ProjectStore from "./projectStore";
+import { IStore } from "./store";
 
 configure({ enforceActions: "always" });
 
-export class RootStore {
+export class RootStore implements IStore {
   activityStore: AppTaskStore;
   projectStore: ProjectStore;
   userStore: UserStore;

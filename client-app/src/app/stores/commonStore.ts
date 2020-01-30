@@ -1,7 +1,8 @@
 import { RootStore } from "./rootStore";
 import { observable, action, reaction } from "mobx";
+import { IStore } from "./store";
 
-export default class CommonStore {
+export default class CommonStore implements IStore {
   rootStore: RootStore;
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
