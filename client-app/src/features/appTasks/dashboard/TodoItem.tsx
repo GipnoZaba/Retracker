@@ -1,7 +1,14 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, Fragment } from "react";
 import { observer } from "mobx-react-lite";
 import { IAppTask } from "../../../app/models/appTask";
-import { Button, List, Transition, Segment } from "semantic-ui-react";
+import {
+  Button,
+  List,
+  Transition,
+  Segment,
+  Grid,
+  Container
+} from "semantic-ui-react";
 import { colors } from "../../../app/common/styling/ColorPalette";
 import { RootStoreContext } from "../../../app/stores/rootStore";
 import EditTaskForm from "./EditTaskForm";
@@ -23,58 +30,74 @@ const TodoItem: React.FC<{ appTask: IAppTask }> = ({ appTask }) => {
         onMouseEnter={() => setHoverItemId(appTask.id)}
         onMouseLeave={() => setHoverItemId("")}
       >
-        <Button
-          inverted
-          icon={appTask.isDone ? "undo" : "check"}
-          color={appTask.isDone ? colors.negative : colors.positive}
-          size="tiny"
-          onClick={
-            appTask.isDone
-              ? () => {
-                  restoreAppTask(appTask.id);
-                  setHoverItemId("");
+        <Grid>
+          <Grid.Row>
+            <Grid.Column stretched className="pr-0" width={2}>
+              <Button
+                inverted
+                icon={appTask.isDone ? "undo" : "check"}
+                color={appTask.isDone ? colors.negative : colors.positive}
+                size="tiny"
+                onClick={
+                  appTask.isDone
+                    ? () => {
+                        restoreAppTask(appTask.id);
+                        setHoverItemId("");
+                      }
+                    : () => {
+                        completeAppTask(appTask.id);
+                        setHoverItemId("");
+                      }
                 }
-              : () => {
-                  completeAppTask(appTask.id);
-                  setHoverItemId("");
-                }
-          }
-        />
-
-        <big className="pl-3">{appTask.title}</big>
-        <Transition
-          visible={hoverItemId === appTask.id}
-          animation="scale"
-          duration={0}
-        >
-          <Button.Group floated="right" compact>
-            <Button
-              inverted
-              disabled={appTask.isDone}
-              color={colors.positive}
-              icon="edit"
-              size="tiny"
-              onClick={() => {
-                openModal(<EditTaskForm appTask={appTask} />);
-                setHoverItemId("");
-              }}
-            />
-            <Button
-              inverted
-              disabled={appTask.isDone}
-              icon="ban"
-              color={colors.negative}
-              size="tiny"
-              onClick={() => {
-                deleteAppTask(appTask.id);
-                setHoverItemId("");
-              }}
-            />
-          </Button.Group>
-        </Transition>
+              />
+            </Grid.Column>
+            <Grid.Column className="text-break" width={10}>
+              <Container className="py-3" content={appTask.title} />
+            </Grid.Column>
+            <Grid.Column width={4} verticalAlign="top" textAlign="right">
+              <Fragment>
+                <Transition
+                  visible={hoverItemId === appTask.id}
+                  animation="scale"
+                  duration={0}
+                >
+                  <div>
+                    <Button
+                      circular
+                      inverted
+                      disabled={appTask.isDone}
+                      color={colors.positive}
+                      icon="edit"
+                      size="tiny"
+                      onClick={() => {
+                        openModal(<EditTaskForm appTask={appTask} />);
+                        setHoverItemId("");
+                      }}
+                    />
+                    <Button
+                      circular
+                      inverted
+                      disabled={appTask.isDone}
+                      icon="ban"
+                      color={colors.negative}
+                      size="tiny"
+                      onClick={() => {
+                        deleteAppTask(appTask.id);
+                        setHoverItemId("");
+                      }}
+                    />
+                  </div>
+                </Transition>
+              </Fragment>
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
       </Segment>
     </List.Item>
   );
 };
 
 export default observer(TodoItem);
+
+/*
+ */

@@ -1,4 +1,4 @@
-import { observable, action, runInAction, computed, reaction } from "mobx";
+import { observable, action, runInAction, computed } from "mobx";
 import { IAppTask, IAppTaskFormValues } from "../models/appTask";
 import agent from "../api/agent";
 import { toast } from "react-toastify";
@@ -13,27 +13,14 @@ export default class AppTaskStore implements IStore {
   rootStore: RootStore;
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
-
-    reaction(
-      () => this.appTasksRegistry,
-      appTasksRegistry => {
-        console.log(appTasksRegistry.values.length);
-        if (appTasksRegistry.values.length > 0) {
-          window.localStorage.setItem(
-            this.appTasksRegistryKey,
-            JSON.stringify(appTasksRegistry)
-          );
-        } else {
-          window.localStorage.removeItem(this.appTasksRegistryKey);
-        }
-      }
-    );
   }
 
   reset() {
     this.appTasksRegistry.clear();
     this.loadingInitial = false;
     this.submitting = false;
+
+    this.updateStorage();
   }
 
   appTasksRegistryKey = "appTasksRegistryKey";
@@ -43,7 +30,6 @@ export default class AppTaskStore implements IStore {
   @observable submitting = false;
 
   @action loadAppTasks = async () => {
-    this.appTasksRegistry.clear();
     this.loadingInitial = true;
 
     if (window.localStorage.getItem(this.appTasksRegistryKey) !== null) {
@@ -59,10 +45,7 @@ export default class AppTaskStore implements IStore {
           this.appTasksRegistry.set(appTask.id, appTask);
         });
 
-        window.localStorage.setItem(
-          this.appTasksRegistryKey,
-          JSON.stringify(this.appTasksRegistry)
-        );
+        this.updateStorage();
 
         this.loadingInitial = false;
       });
@@ -109,6 +92,8 @@ export default class AppTaskStore implements IStore {
           this.appTasksRegistry.set(appTask.id, appTask);
         }
 
+        this.updateStorage();
+
         this.submitting = false;
       });
     } catch (error) {
@@ -131,6 +116,9 @@ export default class AppTaskStore implements IStore {
           appTask.description = formValues.description ?? appTask.description;
           this.appTasksRegistry.set(formValues.id, appTask);
         }
+
+        this.updateStorage();
+
         this.rootStore.modalStore.closeModal();
         this.submitting = false;
       });
@@ -153,6 +141,9 @@ export default class AppTaskStore implements IStore {
           appTask.isDone = true;
           this.appTasksRegistry.set(id, appTask);
         }
+
+        this.updateStorage();
+
         this.submitting = false;
       });
     } catch (error) {
@@ -174,6 +165,9 @@ export default class AppTaskStore implements IStore {
           appTask.isDone = false;
           this.appTasksRegistry.set(id, appTask);
         }
+
+        this.updateStorage();
+
         this.submitting = false;
       });
     } catch (error) {
@@ -191,6 +185,9 @@ export default class AppTaskStore implements IStore {
 
       runInAction("deleting task", () => {
         this.appTasksRegistry.delete(id);
+
+        this.updateStorage();
+
         this.submitting = false;
       });
     } catch (error) {
@@ -200,6 +197,17 @@ export default class AppTaskStore implements IStore {
       toast.error(messageErrorSubmit);
     }
   };
+
+  updateStorage() {
+    if (this.appTasksRegistry.size > 0) {
+      window.localStorage.setItem(
+        this.appTasksRegistryKey,
+        JSON.stringify(this.appTasksRegistry)
+      );
+    } else {
+      window.localStorage.removeItem(this.appTasksRegistryKey);
+    }
+  }
 
   setAppTasksRegistryFromJson() {
     let json = window.localStorage.getItem(this.appTasksRegistryKey);

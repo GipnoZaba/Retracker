@@ -1,14 +1,42 @@
 $spacer: 10px;
 
+// colors
+.opacity-0 {
+    opacity: 0;
+    filter: alpha(opacity=0); /* For IE8 and earlier */
+}
+
+.opacity-25 {
+    opacity: 0.25;
+    filter: alpha(opacity=25); /* For IE8 and earlier */
+}
+
+.opacity-50 {
+    opacity: 0.5;
+    filter: alpha(opacity=50); /* For IE8 and earlier */
+}
+
+.opacity-75 {
+    opacity: 0.75;
+    filter: alpha(opacity=75); /* For IE8 and earlier */
+}
+
+// text
 .menuFont {
     font-size: 18px;
 }
 
+.text-break {
+    overflow: hidden;
+    overflow-wrap: break-word;
+}
+
+// spacing
+// concrete spacing
 .main {
     margin-left: 160px;
 }
 
-// spacing
 // padding
 .p-0 {
     padding: 0 !important;
