@@ -15,6 +15,7 @@ import { IUserFormValues } from "../../app/models/user";
 import { FORM_ERROR } from "final-form";
 import { combineValidators, isRequired } from "revalidate";
 import { observer } from "mobx-react-lite";
+import { registerPath } from "../../app/common/utils/paths";
 
 const validate = combineValidators({
   email: isRequired("email"),
@@ -88,7 +89,7 @@ const LoginForm = () => {
               </Segment>
             </Form>
             <Message>
-              New to us? <a href="/register">Sign Up</a>
+              New to us? <a href={registerPath}>Sign Up</a>
             </Message>
           </Grid.Column>
         </Grid>

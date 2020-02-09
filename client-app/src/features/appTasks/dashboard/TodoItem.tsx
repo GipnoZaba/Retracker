@@ -51,10 +51,10 @@ const TodoItem: React.FC<{ appTask: IAppTask }> = ({ appTask }) => {
                 }
               />
             </Grid.Column>
-            <Grid.Column className="text-break" width={10}>
+            <Grid.Column className="text-break" width={11}>
               <Container className="py-3" content={appTask.title} />
             </Grid.Column>
-            <Grid.Column width={4} verticalAlign="top" textAlign="right">
+            <Grid.Column width={3} verticalAlign="top" textAlign="right">
               <Fragment>
                 <Transition
                   visible={hoverItemId === appTask.id}

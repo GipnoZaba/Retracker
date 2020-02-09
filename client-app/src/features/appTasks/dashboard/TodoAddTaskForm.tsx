@@ -1,4 +1,4 @@
-import React, { useContext, useState, FormEvent, useEffect } from "react";
+import React, { useContext, useState, FormEvent } from "react";
 import { observer } from "mobx-react-lite";
 import { Button, Transition, Container, Form } from "semantic-ui-react";
 import { colors } from "../../../app/common/styling/ColorPalette";
@@ -25,13 +25,17 @@ const TodoAddTaskForm = () => {
     setFormValues({ ...formValues, [name]: value });
   };
 
+  const cancelAdding = () => {
+    setIsAddingTask(false);
+    setFormValues({ ...formValues, title: "" });
+  };
+
   const handleSubmit = () => {
     if (
       !formValues.title ||
       (formValues.title && formValues.title.trim() === "")
     ) {
-      setIsAddingTask(false);
-      setFormValues({ ...formValues, title: "" });
+      cancelAdding();
       return;
     }
 

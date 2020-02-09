@@ -13,6 +13,15 @@ import Dashboard from "../../features/dashboard/Dashboard";
 import HomePage from "../../features/home/HomePage";
 import ModalContainer from "../common/modal/ModalContainer";
 import LoginForm from "../../features/user/LoginForm";
+import Workspace from "../../features/workspace/Workspace";
+import {
+  workspacePath,
+  tasksPath,
+  projectsPath,
+  dashboardPath,
+  registerPath,
+  loginPath
+} from "../common/utils/paths";
 
 const App = () => {
   const rootStore = useContext(RootStoreContext);
@@ -36,8 +45,8 @@ const App = () => {
       <ModalContainer />
       <ToastContainer position="bottom-right" />
       <Route exact path="/" component={HomePage} />
-      <Route exact path="/login" component={LoginForm} />
-      <Route exact path="/register" component={RegisterForm} />
+      <Route exact path={loginPath} component={LoginForm} />
+      <Route exact path={registerPath} component={RegisterForm} />
       <Route
         path={"/(.+)"}
         render={() => (
@@ -45,9 +54,10 @@ const App = () => {
             <SideBar />
             <div className="main">
               <Switch>
-                <Route path="/today" component={TodoBoard} />
-                <Route path="/projects" component={ProjectSelectionBoard} />
-                <Route path="/dashboard" component={Dashboard} />
+                <Route path={workspacePath} component={Workspace} />
+                <Route path={tasksPath} component={TodoBoard} />
+                <Route path={projectsPath} component={ProjectSelectionBoard} />
+                <Route path={dashboardPath} component={Dashboard} />
                 <Route component={NotFound} />
               </Switch>
             </div>

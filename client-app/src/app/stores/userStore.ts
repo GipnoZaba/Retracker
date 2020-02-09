@@ -4,6 +4,7 @@ import agent from "../api/agent";
 import { RootStore } from "./rootStore";
 import { history } from "../..";
 import { IStore } from "./store";
+import { workspacePath } from "../common/utils/paths";
 
 export default class UserStore implements IStore {
   rootStore: RootStore;
@@ -26,7 +27,7 @@ export default class UserStore implements IStore {
       const user = await agent.User.register(values);
       this.rootStore.commonStore.setToken(user.token);
       this.rootStore.modalStore.closeModal();
-      history.push("/today");
+      history.push(workspacePath);
     } catch (error) {
       throw error;
     }
@@ -41,7 +42,7 @@ export default class UserStore implements IStore {
       this.rootStore.commonStore.setToken(user.token);
       this.rootStore.modalStore.closeModal();
 
-      history.push("/today");
+      history.push(workspacePath);
     } catch (error) {
       throw error;
     }

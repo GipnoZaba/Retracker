@@ -1,6 +1,10 @@
 $spacer: 10px;
 
 // colors
+.segment.secondary {
+    background-color: #ebe3de !important;
+}
+
 .opacity-0 {
     opacity: 0;
     filter: alpha(opacity=0); /* For IE8 and earlier */

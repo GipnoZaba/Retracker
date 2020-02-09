@@ -70,13 +70,18 @@ export default class AppTaskStore implements IStore {
   }
 
   groupAppTasksByOrder(appTasks: IAppTask[]) {
-    return appTasks.sort((a, b) => a.orderIndex - b.orderIndex);
+    const sortedAppTasks = appTasks.sort(
+      (a, b) =>
+        new Date(a.dateCreated).getTime() - new Date(b.dateCreated).getTime()
+    );
+
+    return sortedAppTasks;
   }
 
   @action createAppTask = async (formValues: IAppTaskFormValues) => {
     this.submitting = true;
     try {
-      formValues.date = new Date();
+      formValues.dateCreated = new Date();
       await agent.AppTasks.create(formValues);
 
       runInAction("create task", () => {
@@ -86,7 +91,7 @@ export default class AppTaskStore implements IStore {
             title: formValues.title,
             orderIndex: this.appTasksRegistry.values.length,
             description: "",
-            date: formValues.date ?? new Date(),
+            dateCreated: formValues.dateCreated ?? new Date(),
             isDone: false
           };
           this.appTasksRegistry.set(appTask.id, appTask);

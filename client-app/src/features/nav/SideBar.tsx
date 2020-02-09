@@ -2,6 +2,12 @@ import React, { useContext } from "react";
 import { Menu, Icon, Button } from "semantic-ui-react";
 import { NavLink } from "react-router-dom";
 import { RootStoreContext } from "../../app/stores/rootStore";
+import {
+  workspacePath,
+  tasksPath,
+  projectsPath,
+  dashboardPath
+} from "../../app/common/utils/paths";
 
 const menuStyle = {
   height: "100%",
@@ -17,15 +23,19 @@ const SideBar = () => {
   return (
     <Menu vertical secondary pointing style={menuStyle}>
       <Menu.Menu>
-        <Menu.Item as={NavLink} to="/today">
+        <Menu.Item as={NavLink} to={workspacePath}>
           <Icon size="large" name="gamepad" />
-          <div className="menuFont">Today</div>
+          <div className="menuFont">Workspace</div>
         </Menu.Item>
-        <Menu.Item as={NavLink} to="/projects">
+        <Menu.Item as={NavLink} to={tasksPath}>
+          <Icon size="large" name="clipboard list" />
+          <div className="menuFont">Tasks</div>
+        </Menu.Item>
+        <Menu.Item as={NavLink} to={projectsPath}>
           <Icon size="large" name="video play" />
           <div className="menuFont">Projects</div>
         </Menu.Item>
-        <Menu.Item as={NavLink} to="/dashboard">
+        <Menu.Item as={NavLink} to={dashboardPath}>
           <Icon size="large" name="video camera" />
           <div className="menuFont">Dashboard</div>
         </Menu.Item>
