@@ -7,7 +7,8 @@ import {
   Transition,
   Segment,
   Grid,
-  Container
+  Container,
+  Label
 } from "semantic-ui-react";
 import { colors } from "../../../app/common/styling/ColorPalette";
 import { RootStoreContext } from "../../../app/stores/rootStore";
@@ -98,6 +99,3 @@ const TodoItem: React.FC<{ appTask: IAppTask }> = ({ appTask }) => {
 };
 
 export default observer(TodoItem);
-
-/*
- */

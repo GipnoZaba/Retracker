@@ -5,6 +5,7 @@ import { observer } from "mobx-react-lite";
 import RegisterForm from "../user/RegisterForm";
 import LoginForm from "../user/LoginForm";
 import { Link } from "react-router-dom";
+import { workspacePath } from "../../app/common/utils/paths";
 
 const HomePage = () => {
   const rootStore = useContext(RootStoreContext);
@@ -21,7 +22,7 @@ const HomePage = () => {
             <Fragment>
               <Button
                 as={Link}
-                to="/today"
+                to={workspacePath}
                 size="huge"
                 inverted
                 content="Open tasks"

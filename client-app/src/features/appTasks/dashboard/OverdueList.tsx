@@ -7,7 +7,7 @@ import { colors } from "../../../app/common/styling/ColorPalette";
 import LoadingPlaceholder from "../../../app/layout/LoadingPlaceholder";
 import { IAppTask } from "../../../app/models/appTask";
 
-const DoneList: React.FC<{ appTasks: IAppTask[] }> = ({ appTasks }) => {
+const OverdueList: React.FC<{ appTasks: IAppTask[] }> = ({ appTasks }) => {
   const rootStore = useContext(RootStoreContext);
   const { loadingInitial } = rootStore.activityStore;
 
@@ -25,7 +25,7 @@ const DoneList: React.FC<{ appTasks: IAppTask[] }> = ({ appTasks }) => {
         size="large"
         color={colors.negative}
         attached="top"
-        content="Done"
+        content="Overdue"
       />
       <List>
         {appTasks.map(appTask => (
@@ -36,4 +36,4 @@ const DoneList: React.FC<{ appTasks: IAppTask[] }> = ({ appTasks }) => {
   );
 };
 
-export default observer(DoneList);
+export default observer(OverdueList);

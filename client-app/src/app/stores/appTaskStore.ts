@@ -5,9 +5,11 @@ import { toast } from "react-toastify";
 import { RootStore } from "./rootStore";
 import {
   messageErrorRetrieve,
-  messageErrorSubmit
+  messageErrorSubmit,
+  isOverdue
 } from "../common/utils/utilities";
 import { IStore } from "./store";
+import { compareAsc, isToday } from "date-fns";
 
 export default class AppTaskStore implements IStore {
   rootStore: RootStore;
@@ -57,31 +59,50 @@ export default class AppTaskStore implements IStore {
     }
   };
 
-  @computed get todoTasksByOrder() {
-    return this.groupAppTasksByOrder(
-      Array.from(this.appTasksRegistry.values()).filter(task => !task.isDone)
+  @computed get appTasksByDate() {
+    return this.groupAppTasksByDate(
+      Array.from(this.appTasksRegistry.values()).filter(
+        appTask => !appTask.isDone && !isOverdue(new Date(appTask.deadline))
+      )
     );
   }
 
-  @computed get doneTasksByOrder() {
-    return this.groupAppTasksByOrder(
-      Array.from(this.appTasksRegistry.values()).filter(task => task.isDone)
+  @computed get doneTasks() {
+    return Array.from(this.appTasksRegistry.values()).filter(
+      appTask => appTask.isDone
     );
   }
 
-  groupAppTasksByOrder(appTasks: IAppTask[]) {
-    const sortedAppTasks = appTasks.sort(
-      (a, b) =>
-        new Date(a.dateCreated).getTime() - new Date(b.dateCreated).getTime()
+  @computed get overdueTasks() {
+    return Array.from(this.appTasksRegistry.values()).filter(
+      appTask => !appTask.isDone && isOverdue(new Date(appTask.deadline))
+    );
+  }
+
+  groupAppTasksByDate(appTasks: IAppTask[]) {
+    const sortedAppTasks = appTasks.sort((a, b) =>
+      compareAsc(new Date(a.deadline), new Date(b.deadline))
     );
 
-    return sortedAppTasks;
+    return Object.entries(
+      sortedAppTasks.reduce((tasks, appTask) => {
+        const deadline = new Date(appTask.deadline);
+
+        const group = isToday(deadline)
+          ? "Today"
+          : deadline.toISOString().split("T")[0];
+
+        tasks[group] = tasks[group] ? [...tasks[group], appTask] : [appTask];
+        return tasks;
+      }, {} as { [key: string]: IAppTask[] })
+    );
   }
 
   @action createAppTask = async (formValues: IAppTaskFormValues) => {
     this.submitting = true;
     try {
-      formValues.dateCreated = new Date();
+      formValues.dateCreated = formValues.dateCreated ?? new Date();
+      formValues.deadline = formValues.deadline ?? new Date();
       await agent.AppTasks.create(formValues);
 
       runInAction("create task", () => {
@@ -91,6 +112,7 @@ export default class AppTaskStore implements IStore {
             title: formValues.title,
             orderIndex: this.appTasksRegistry.values.length,
             description: "",
+            deadline: formValues.deadline ?? new Date(),
             dateCreated: formValues.dateCreated ?? new Date(),
             isDone: false
           };
