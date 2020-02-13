@@ -10,14 +10,14 @@ import { IStore } from "./store";
 configure({ enforceActions: "always" });
 
 export class RootStore implements IStore {
-  activityStore: AppTaskStore;
+  appTaskStore: AppTaskStore;
   projectStore: ProjectStore;
   userStore: UserStore;
   commonStore: CommonStore;
   modalStore: ModalStore;
 
   constructor() {
-    this.activityStore = new AppTaskStore(this);
+    this.appTaskStore = new AppTaskStore(this);
     this.projectStore = new ProjectStore(this);
     this.userStore = new UserStore(this);
     this.commonStore = new CommonStore(this);
@@ -25,7 +25,7 @@ export class RootStore implements IStore {
   }
 
   reset = () => {
-    this.activityStore.reset();
+    this.appTaskStore.reset();
     this.projectStore.reset();
     this.userStore.reset();
     this.commonStore.reset();

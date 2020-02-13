@@ -7,8 +7,7 @@ import {
   Transition,
   Segment,
   Grid,
-  Container,
-  Label
+  Container
 } from "semantic-ui-react";
 import { colors } from "../../../app/common/styling/ColorPalette";
 import { RootStoreContext } from "../../../app/stores/rootStore";
@@ -20,7 +19,7 @@ const TodoItem: React.FC<{ appTask: IAppTask }> = ({ appTask }) => {
     completeAppTask,
     restoreAppTask,
     deleteAppTask
-  } = rootStore.activityStore;
+  } = rootStore.appTaskStore;
   const { openModal } = rootStore.modalStore;
   const [hoverItemId, setHoverItemId] = useState("");
 

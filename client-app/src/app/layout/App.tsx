@@ -22,6 +22,7 @@ import {
   registerPath,
   loginPath
 } from "../common/utils/paths";
+import ProjectBoard from "../../features/projects/ProjectBoard";
 
 const App = () => {
   const rootStore = useContext(RootStoreContext);
@@ -55,8 +56,9 @@ const App = () => {
             <div className="main">
               <Switch>
                 <Route path={workspacePath} component={Workspace} />
-                <Route path={tasksPath} component={TodoBoard} />
-                <Route path={projectsPath} component={ProjectSelectionBoard} />
+                <Route exact path={tasksPath} component={TodoBoard} />
+                <Route exact path={projectsPath} component={ProjectSelectionBoard} />
+                <Route path={projectsPath + "/:id"} component={ProjectBoard} />
                 <Route path={dashboardPath} component={Dashboard} />
                 <Route component={NotFound} />
               </Switch>

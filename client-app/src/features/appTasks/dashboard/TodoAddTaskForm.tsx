@@ -7,15 +7,16 @@ import uuid from "uuid";
 import { RootStoreContext } from "../../../app/stores/rootStore";
 import { focusOnElementById } from "../../../app/common/utils/utilities";
 
-const TodoAddTaskForm = () => {
+const TodoAddTaskForm: React.FC<{ group: string }> = ({ group }) => {
   const rootStore = useContext(RootStoreContext);
 
-  const { createAppTask } = rootStore.activityStore;
+  const { createAppTask } = rootStore.appTaskStore;
 
   const [isAddingTask, setIsAddingTask] = useState(false);
   const [formValues, setFormValues] = useState<IAppTaskFormValues>({
     id: uuid(),
-    title: ""
+    title: "",
+    deadline: new Date(group)
   });
 
   const handleformValuesChange = (
@@ -43,7 +44,8 @@ const TodoAddTaskForm = () => {
 
     setFormValues({
       id: uuid(),
-      title: ""
+      title: "",
+      deadline: new Date(group)
     });
 
     focusOnElementById("inputTitle", document);

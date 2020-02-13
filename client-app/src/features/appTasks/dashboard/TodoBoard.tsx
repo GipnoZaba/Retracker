@@ -14,7 +14,7 @@ const TodoBoard = () => {
     appTasksByDate,
     doneTasks,
     overdueTasks
-  } = rootStore.activityStore;
+  } = rootStore.appTaskStore;
   const { isLoggedIn } = rootStore.userStore;
 
   useEffect(() => {
@@ -34,11 +34,17 @@ const TodoBoard = () => {
       <Grid stackable>
         <Grid.Column width={8}>
           <Fragment>
-            {appTasksByDate.map(([group, appTasks]) => (
-              <Fragment key={group}>
-                <TodoList appTasks={appTasks} group={group} />
+            {appTasksByDate.length === 0 ? (
+              <Fragment key="Default">
+                <TodoList appTasks={[]} group={new Date().toISOString()} />
               </Fragment>
-            ))}
+            ) : (
+              appTasksByDate.map(([group, appTasks]) => (
+                <Fragment key={group}>
+                  <TodoList appTasks={appTasks} group={group} />
+                </Fragment>
+              ))
+            )}
           </Fragment>
         </Grid.Column>
         <Grid.Column width={8}>

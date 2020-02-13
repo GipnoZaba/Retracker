@@ -1,4 +1,4 @@
-import { observable, action, runInAction, computed } from "mobx";
+import { observable, action, runInAction, computed, toJS } from "mobx";
 import agent from "../api/agent";
 import { toast } from "react-toastify";
 import { RootStore } from "./rootStore";
@@ -42,6 +42,31 @@ export default class ProjectStore implements IStore {
     }
   };
 
+  @action loadProject = async (id: string) => {
+    let project = this.getProject(id);
+    if (project) {
+      return toJS(project);
+    } else {
+      this.loadingInitial = true;
+      try {
+        project = await agent.Projects.details(id);
+        runInAction("getting project", () => {
+          if (project) {
+            this.appProjectsRegistry.set(project.id, project);
+            this.loadingInitial = false;
+            return project;
+          } else {
+            throw Error();
+          }
+        });
+      } catch (error) {
+        runInAction(messageErrorRetrieve, () => {
+          this.loadingInitial = false;
+        });
+      }
+    }
+  };
+
   @computed get projectsByOrder() {
     return this.groupProjects(Array.from(this.appProjectsRegistry.values()));
   }
@@ -50,5 +75,9 @@ export default class ProjectStore implements IStore {
     return projects.sort(
       (a, b) => a.dateCreated.getDay() - b.dateCreated.getDay()
     );
+  }
+
+  getProject(id: string) {
+    return this.appProjectsRegistry.get(id);
   }
 }

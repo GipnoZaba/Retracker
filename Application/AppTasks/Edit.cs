@@ -38,7 +38,7 @@ namespace Application.AppTasks
 
                 appTask.Title = request.Title ?? appTask.Title;
                 appTask.Description = request.Description ?? appTask.Description;
-                appTask.DateCreated = request.Deadline ?? appTask.Deadline;
+                appTask.Deadline = request.Deadline ?? appTask.Deadline;
 
                 bool isSaved = await _context.SaveChangesAsync() > 0;
 

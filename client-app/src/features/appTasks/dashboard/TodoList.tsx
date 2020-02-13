@@ -7,13 +7,14 @@ import { colors } from "../../../app/common/styling/ColorPalette";
 import TodoAddTaskForm from "./TodoAddTaskForm";
 import LoadingPlaceholder from "../../../app/layout/LoadingPlaceholder";
 import { IAppTask } from "../../../app/models/appTask";
+import { isToday } from "date-fns";
 
 const TodoList: React.FC<{ appTasks: IAppTask[]; group: string }> = ({
   appTasks,
   group
 }) => {
   const rootStore = useContext(RootStoreContext);
-  const { loadingInitial } = rootStore.activityStore;
+  const { loadingInitial } = rootStore.appTaskStore;
 
   if (loadingInitial) {
     return (
@@ -29,14 +30,14 @@ const TodoList: React.FC<{ appTasks: IAppTask[]; group: string }> = ({
         size="large"
         color={colors.positive}
         attached="top"
-        content={group}
+        content={isToday(new Date(group)) ? "Today" : group}
       />
       <List selection>
         {appTasks.map(appTask => (
           <TodoItem appTask={appTask} key={appTask.id} />
         ))}
       </List>
-      <TodoAddTaskForm />
+      <TodoAddTaskForm group={group} />
     </Segment>
   );
 };

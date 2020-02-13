@@ -9,7 +9,7 @@ import { IAppTask } from "../../../app/models/appTask";
 
 const OverdueList: React.FC<{ appTasks: IAppTask[] }> = ({ appTasks }) => {
   const rootStore = useContext(RootStoreContext);
-  const { loadingInitial } = rootStore.activityStore;
+  const { loadingInitial } = rootStore.appTaskStore;
 
   if (loadingInitial) {
     return (

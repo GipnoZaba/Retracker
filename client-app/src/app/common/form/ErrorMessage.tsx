@@ -7,7 +7,7 @@ interface IProps {
   text?: string;
 }
 
-const ErrorMessage: React.FC<IProps> = ({ error, text }) => {
+export const ErrorMessage: React.FC<IProps> = ({ error, text }) => {
   return (
     <Message error>
       <Message.Header>{error.statusText}</Message.Header>
@@ -24,5 +24,3 @@ const ErrorMessage: React.FC<IProps> = ({ error, text }) => {
     </Message>
   );
 };
-
-export default ErrorMessage;

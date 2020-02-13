@@ -9,7 +9,7 @@ import {
   isOverdue
 } from "../common/utils/utilities";
 import { IStore } from "./store";
-import { compareAsc, isToday } from "date-fns";
+import { compareAsc } from "date-fns";
 
 export default class AppTaskStore implements IStore {
   rootStore: RootStore;
@@ -88,9 +88,7 @@ export default class AppTaskStore implements IStore {
       sortedAppTasks.reduce((tasks, appTask) => {
         const deadline = new Date(appTask.deadline);
 
-        const group = isToday(deadline)
-          ? "Today"
-          : deadline.toISOString().split("T")[0];
+        const group = deadline.toISOString().split("T")[0];
 
         tasks[group] = tasks[group] ? [...tasks[group], appTask] : [appTask];
         return tasks;
@@ -103,6 +101,7 @@ export default class AppTaskStore implements IStore {
     try {
       formValues.dateCreated = formValues.dateCreated ?? new Date();
       formValues.deadline = formValues.deadline ?? new Date();
+      formValues.deadline.setUTCHours(5); // otherwise sets to 00:00:00 and later transforms to previous day
       await agent.AppTasks.create(formValues);
 
       runInAction("create task", () => {
@@ -134,13 +133,18 @@ export default class AppTaskStore implements IStore {
   @action editAppTask = async (formValues: IAppTaskFormValues) => {
     this.submitting = true;
     try {
+      if (formValues.deadline) {
+        formValues.deadline = new Date(formValues.deadline);
+      }
+      formValues.deadline?.setUTCHours(5);
       await agent.AppTasks.edit(formValues);
 
       runInAction("editing task", () => {
         var appTask = this.appTasksRegistry.get(formValues.id);
         if (appTask) {
-          appTask.title = formValues.title ?? appTask.title;
-          appTask.description = formValues.description ?? appTask.description;
+          appTask.title = formValues.title!;
+          appTask.description = formValues.description!;
+          appTask.deadline = formValues.deadline!;
           this.appTasksRegistry.set(formValues.id, appTask);
         }
 
