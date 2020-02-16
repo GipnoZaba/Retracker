@@ -2,9 +2,10 @@ import { observable, action, runInAction, computed, toJS } from "mobx";
 import agent from "../api/agent";
 import { toast } from "react-toastify";
 import { RootStore } from "./rootStore";
-import { IProject } from "../models/project";
+import { IProject, IProjectList } from "../models/project";
 import { messageErrorRetrieve } from "../common/utils/utilities";
 import { IStore } from "./store";
+import { compareAsc } from "date-fns";
 
 export default class ProjectStore implements IStore {
   rootStore: RootStore;
@@ -42,6 +43,31 @@ export default class ProjectStore implements IStore {
     }
   };
 
+  projectListsByDate(id: string) {
+    const project = this.appProjectsRegistry.get(id);
+    if (project) {
+      return this.groupProjectListsByDate(project.lists);
+    }
+    return null;
+  }
+
+  groupProjectListsByDate(lists: IProjectList[]) {
+    const sortedLists = lists.sort((a, b) =>
+      compareAsc(new Date(a.deadline), new Date(b.deadline))
+    );
+
+    return Object.entries(
+      sortedLists.reduce((lists, list) => {
+        const deadline = new Date(list.deadline);
+
+        const group = deadline.toISOString().split("T")[0];
+
+        lists[group] = lists[group] ? [...lists[group], list] : [list];
+        return lists;
+      }, {} as { [key: string]: IProjectList[] })
+    );
+  }
+
   @action loadProject = async (id: string) => {
     let project = this.getProject(id);
     if (project) {
@@ -54,11 +80,9 @@ export default class ProjectStore implements IStore {
           if (project) {
             this.appProjectsRegistry.set(project.id, project);
             this.loadingInitial = false;
-            return project;
-          } else {
-            throw Error();
           }
         });
+        return toJS(project);
       } catch (error) {
         runInAction(messageErrorRetrieve, () => {
           this.loadingInitial = false;
@@ -68,10 +92,10 @@ export default class ProjectStore implements IStore {
   };
 
   @computed get projectsByOrder() {
-    return this.groupProjects(Array.from(this.appProjectsRegistry.values()));
+    return this.sortByDate(Array.from(this.appProjectsRegistry.values()));
   }
 
-  groupProjects(projects: IProject[]) {
+  sortByDate(projects: IProject[]) {
     return projects.sort(
       (a, b) => a.dateCreated.getDay() - b.dateCreated.getDay()
     );

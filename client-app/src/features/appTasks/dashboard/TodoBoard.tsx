@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, Fragment } from "react";
 import TodoList from "./TodoList";
-import { Segment, Grid, Label } from "semantic-ui-react";
+import { Segment, Grid } from "semantic-ui-react";
 import { observer } from "mobx-react-lite";
 import DoneList from "./DoneList";
 import { RootStoreContext } from "../../../app/stores/rootStore";
@@ -15,7 +15,6 @@ const TodoBoard = () => {
     doneTasks,
     overdueTasks
   } = rootStore.appTaskStore;
-  const { isLoggedIn } = rootStore.userStore;
 
   useEffect(() => {
     loadAppTasks();
@@ -24,10 +23,6 @@ const TodoBoard = () => {
       window.localStorage.removeItem(appTasksRegistryKey);
     };
   }, [loadAppTasks, appTasksRegistryKey]);
-
-  if (isLoggedIn === false) {
-    return <Label content="Not logged in" />;
-  }
 
   return (
     <Segment attached>

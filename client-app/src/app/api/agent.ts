@@ -74,7 +74,7 @@ const User = {
 const AppTasks = {
   list: (): Promise<IAppTask[]> => requests.get("/apptasks"),
   create: (appTask: IAppTaskFormValues) => requests.post("/apptasks", appTask),
-  details: (id: string) => requests.get(`/apptasks/${id}`),
+  details: (id: string): Promise<IAppTask> => requests.get(`/apptasks/${id}`),
   edit: (appTask: IAppTaskFormValues) =>
     requests.put(`/apptasks/${appTask.id}`, appTask),
   complete: (id: string) => requests.patch(`/apptasks/${id}/complete`, {}),
@@ -85,7 +85,7 @@ const AppTasks = {
 const Projects = {
   list: (): Promise<IProject[]> => requests.get("/projects"),
   create: (project: IProjectFormValues) => requests.post("/projects", project),
-  details: (id: string) => requests.get(`/projects/${id}`),
+  details: (id: string): Promise<IProject> => requests.get(`/projects/${id}`),
   edit: (project: IProjectFormValues) =>
     requests.put(`/apptasks/${project.id}`, project),
   delete: (id: string) => requests.del(`/projects/${id}`)

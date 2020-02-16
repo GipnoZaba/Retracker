@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
-using Domain;
-using Domain.Projects;
 
 namespace Application.Projects
 {
@@ -14,5 +12,6 @@ namespace Application.Projects
         public DateTime DateCreated { get; set; }
         [JsonPropertyName("members")]
         public ICollection<MemberDto> UserProjects { get; set; }
+        public ICollection<ProjectListDto> Lists { get; set; }
     }
 }

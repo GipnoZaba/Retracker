@@ -138,7 +138,7 @@ namespace Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("DueDate")
+                    b.Property<DateTime>("Deadline")
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("ProjectId")

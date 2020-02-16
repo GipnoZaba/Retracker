@@ -1,5 +1,12 @@
 $spacer: 10px;
+.timeline {
+    width: 100%;
+    overflow: scroll;
+  }
 
+.project-list {
+    width: 20%;
+}
 // colors
 .segment.secondary {
     background-color: #ebe3de !important;

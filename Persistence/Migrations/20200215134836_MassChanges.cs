@@ -3,12 +3,18 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Persistence.Migrations
 {
-    public partial class ProjectStuff : Migration
+    public partial class MassChanges : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<DateTime>(
                 name: "DateCreated",
+                table: "AppTasks",
+                nullable: false,
+                defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
+
+            migrationBuilder.AddColumn<DateTime>(
+                name: "Deadline",
                 table: "AppTasks",
                 nullable: false,
                 defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
@@ -33,7 +39,7 @@ namespace Persistence.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     ProjectId = table.Column<Guid>(nullable: false),
-                    DueDate = table.Column<DateTime>(nullable: false)
+                    Deadline = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -122,6 +128,10 @@ namespace Persistence.Migrations
 
             migrationBuilder.DropColumn(
                 name: "DateCreated",
+                table: "AppTasks");
+
+            migrationBuilder.DropColumn(
+                name: "Deadline",
                 table: "AppTasks");
         }
     }

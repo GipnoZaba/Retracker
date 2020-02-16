@@ -9,8 +9,8 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20200209164754_DeadlineAdded")]
-    partial class DeadlineAdded
+    [Migration("20200215134836_MassChanges")]
+    partial class MassChanges
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -140,7 +140,7 @@ namespace Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("DueDate")
+                    b.Property<DateTime>("Deadline")
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("ProjectId")

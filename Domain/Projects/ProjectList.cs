@@ -8,7 +8,7 @@ namespace Domain.Projects
         public Guid Id { get; set; }
         public Guid ProjectId { get; set; }
         public virtual Project Project { get; set; }
-        public DateTime DueDate { get; set; }
+        public DateTime Deadline { get; set; }
         public virtual ICollection<ProjectTask> Tasks { get; set; }
     }
 }

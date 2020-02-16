@@ -23,6 +23,7 @@ import {
   loginPath
 } from "../common/utils/paths";
 import ProjectBoard from "../../features/projects/ProjectBoard";
+import PrivateRoute from "./PrivateRoute";
 
 const App = () => {
   const rootStore = useContext(RootStoreContext);
@@ -55,12 +56,19 @@ const App = () => {
             <SideBar />
             <div className="main">
               <Switch>
-                <Route path={workspacePath} component={Workspace} />
-                <Route exact path={tasksPath} component={TodoBoard} />
-                <Route exact path={projectsPath} component={ProjectSelectionBoard} />
-                <Route path={projectsPath + "/:id"} component={ProjectBoard} />
-                <Route path={dashboardPath} component={Dashboard} />
-                <Route component={NotFound} />
+                <PrivateRoute path={workspacePath} component={Workspace} />
+                <PrivateRoute exact path={tasksPath} component={TodoBoard} />
+                <PrivateRoute
+                  exact
+                  path={projectsPath}
+                  component={ProjectSelectionBoard}
+                />
+                <PrivateRoute
+                  path={projectsPath + "/:id"}
+                  component={ProjectBoard}
+                />
+                <PrivateRoute path={dashboardPath} component={Dashboard} />
+                <PrivateRoute component={NotFound} />
               </Switch>
             </div>
           </Fragment>
