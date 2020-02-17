@@ -1,12 +1,15 @@
-import React, { useEffect, useContext } from "react";
-import { Segment, Card, List } from "semantic-ui-react";
+import React, { useEffect, useContext, Fragment } from "react";
+import { Segment, Card, Header, Button } from "semantic-ui-react";
 import { observer } from "mobx-react-lite";
 import ProjectCard from "./ProjectCard";
 import { RootStoreContext } from "../../app/stores/rootStore";
+import { colors } from "../../app/common/styling/ColorPalette";
+import ProjectForm from "./ProjectForm";
 
 const ProjectSelectionBoard = () => {
   const rootStore = useContext(RootStoreContext);
   const { loadProjects, projectsByOrder } = rootStore.projectStore;
+  const { openModal } = rootStore.modalStore;
 
   useEffect(() => {
     loadProjects();
@@ -14,13 +17,22 @@ const ProjectSelectionBoard = () => {
 
   return (
     <Segment attached>
-      <Card.Group centered stackable>
-        <List selection>
+      <Header size="huge" content="Projects" />
+      <Segment secondary color={colors.positive}>
+        <Card.Group stackable itemsPerRow={4}>
           {projectsByOrder.map(project => (
             <ProjectCard project={project} key={project.id} />
           ))}
-        </List>
-      </Card.Group>
+
+          <Card>
+            <Button
+              style={{ height: "100%" }}
+              icon="plus"
+              onClick={() => openModal(<ProjectForm />, "large")}
+            />
+          </Card>
+        </Card.Group>
+      </Segment>
     </Segment>
   );
 };

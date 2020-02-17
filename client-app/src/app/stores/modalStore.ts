@@ -9,21 +9,25 @@ export default class ModalStore implements IStore {
   }
 
   reset() {
-    this.modal = { open: false, body: null };
+    this.modal = { open: false, body: null, size: "mini" };
   }
 
   @observable.shallow modal = {
     open: false,
-    body: null
+    body: null,
+    size: "mini"
   };
 
-  @action openModal = (content: any) => {
+  @action openModal = (content: any, size?: string) => {
     this.modal.open = true;
     this.modal.body = content;
+
+    if (size) this.modal.size = size;
   };
 
   @action closeModal = () => {
     this.modal.open = false;
     this.modal.body = null;
+    this.modal.size = "mini";
   };
 }

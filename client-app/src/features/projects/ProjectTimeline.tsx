@@ -24,7 +24,7 @@ const ProjectTimeline: React.FC<{ projectLists: IProjectList[] }> = ({
       </Divider>
       <Segment className="timeline">
         {projectLists.map(list => (
-          <ProjectList list={list} />
+          <ProjectList list={list} key={list.id} />
         ))}
       </Segment>
     </Fragment>

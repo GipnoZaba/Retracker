@@ -61,7 +61,6 @@ export default class ProjectStore implements IStore {
         const deadline = new Date(list.deadline);
 
         const group = deadline.toISOString().split("T")[0];
-
         lists[group] = lists[group] ? [...lists[group], list] : [list];
         return lists;
       }, {} as { [key: string]: IProjectList[] })
