@@ -7,7 +7,7 @@ import { projectsPath } from "../../app/common/utils/paths";
 
 const ProjectCard: React.FC<{ project: IProject }> = ({ project }) => {
   return (
-    <Card>
+    <Card className="project-card">
       <Card.Content>
         <Card.Header
           as={Link}
@@ -15,7 +15,9 @@ const ProjectCard: React.FC<{ project: IProject }> = ({ project }) => {
           content={project.title}
         />
         <Card.Meta>
-          <span className="date">{project.dateCreated}</span>
+          <span className="date">
+            {new Date(project.dateCreated).toLocaleDateString()}
+          </span>
         </Card.Meta>
         <Card.Description content={project.description} />
       </Card.Content>

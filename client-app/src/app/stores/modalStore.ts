@@ -2,6 +2,10 @@ import { RootStore } from "./rootStore";
 import { observable, action } from "mobx";
 import { IStore } from "./store";
 
+interface ISize {
+    size: "mini" | "small" | "tiny" | "large" | "fullscreen"
+}
+
 export default class ModalStore implements IStore {
   rootStore: RootStore;
   constructor(rootStore: RootStore) {

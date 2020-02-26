@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Persistence.Migrations
 {
-    public partial class MassChanges : Migration
+    public partial class UserProject : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -53,7 +53,7 @@ namespace Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserProject",
+                name: "UserProjects",
                 columns: table => new
                 {
                     ProjectId = table.Column<Guid>(nullable: false),
@@ -62,15 +62,15 @@ namespace Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserProject", x => new { x.AppUserId, x.ProjectId });
+                    table.PrimaryKey("PK_UserProjects", x => new { x.AppUserId, x.ProjectId });
                     table.ForeignKey(
-                        name: "FK_UserProject_AspNetUsers_AppUserId",
+                        name: "FK_UserProjects_AspNetUsers_AppUserId",
                         column: x => x.AppUserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserProject_Projects_ProjectId",
+                        name: "FK_UserProjects_Projects_ProjectId",
                         column: x => x.ProjectId,
                         principalTable: "Projects",
                         principalColumn: "Id",
@@ -107,8 +107,8 @@ namespace Persistence.Migrations
                 column: "ProjectListId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserProject_ProjectId",
-                table: "UserProject",
+                name: "IX_UserProjects_ProjectId",
+                table: "UserProjects",
                 column: "ProjectId");
         }
 
@@ -118,7 +118,7 @@ namespace Persistence.Migrations
                 name: "ProjectTasks");
 
             migrationBuilder.DropTable(
-                name: "UserProject");
+                name: "UserProjects");
 
             migrationBuilder.DropTable(
                 name: "ProjectLists");

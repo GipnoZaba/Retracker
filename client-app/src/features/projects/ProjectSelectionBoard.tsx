@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, Fragment } from "react";
+import React, { useEffect, useContext } from "react";
 import { Segment, Card, Header, Button } from "semantic-ui-react";
 import { observer } from "mobx-react-lite";
 import ProjectCard from "./ProjectCard";
@@ -24,11 +24,13 @@ const ProjectSelectionBoard = () => {
             <ProjectCard project={project} key={project.id} />
           ))}
 
-          <Card>
+          <Card className="project-card">
             <Button
+              inverted
+              color={colors.positive}
               style={{ height: "100%" }}
               icon="plus"
-              onClick={() => openModal(<ProjectForm />, "large")}
+              onClick={() => openModal(<ProjectForm />, "mini")}
             />
           </Card>
         </Card.Group>

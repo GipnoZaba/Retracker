@@ -2,8 +2,11 @@ import { observable, action, runInAction, computed, toJS } from "mobx";
 import agent from "../api/agent";
 import { toast } from "react-toastify";
 import { RootStore } from "./rootStore";
-import { IProject, IProjectList } from "../models/project";
-import { messageErrorRetrieve } from "../common/utils/utilities";
+import { IProject, IProjectList, IProjectFormValues } from "../models/project";
+import {
+  messageErrorRetrieve,
+  messageErrorSubmit
+} from "../common/utils/utilities";
 import { IStore } from "./store";
 import { compareAsc } from "date-fns";
 
@@ -18,6 +21,8 @@ export default class ProjectStore implements IStore {
     this.loadingInitial = false;
     this.submitting = false;
   }
+
+  appProjectsRegistryKey = "appProjectsRegistryKey";
 
   @observable appProjectsRegistry = new Map<string, IProject>();
   @observable submitting = false;
@@ -67,6 +72,58 @@ export default class ProjectStore implements IStore {
     );
   }
 
+  @action createProject = async (formValues: IProjectFormValues) => {
+    this.submitting = true;
+    try {
+      formValues.dateCreated = formValues.dateCreated ?? new Date();
+      await agent.Projects.create(formValues);
+
+      runInAction("create project", () => {
+        if (formValues.title) {
+          var project: IProject = {
+            id: formValues.id,
+            title: formValues.title,
+            description: "",
+            dateCreated: formValues.dateCreated ?? new Date(),
+            lists: [],
+            members: []
+          };
+          this.appProjectsRegistry.set(project.id, project);
+        }
+
+        this.updateStorage();
+
+        this.submitting = false;
+      });
+    } catch (error) {
+      runInAction("create project error", () => {
+        this.submitting = false;
+      });
+      toast.error(messageErrorSubmit);
+    }
+  };
+
+  @action deleteProject = async (id: string) => {
+    console.log("sdsd");
+    this.submitting = true;
+    try {
+      await agent.Projects.delete(id);
+
+      runInAction("deleting project", () => {
+        this.appProjectsRegistry.delete(id);
+
+        this.updateStorage();
+
+        this.submitting = false;
+      });
+    } catch (error) {
+      runInAction("delete project error", () => {
+        this.submitting = false;
+      });
+      toast.error(messageErrorSubmit);
+    }
+  };
+
   @action loadProject = async (id: string) => {
     let project = this.getProject(id);
     if (project) {
@@ -96,11 +153,23 @@ export default class ProjectStore implements IStore {
 
   sortByDate(projects: IProject[]) {
     return projects.sort(
-      (a, b) => a.dateCreated.getDay() - b.dateCreated.getDay()
+      (a, b) =>
+        new Date(a.dateCreated).getDay() - new Date(b.dateCreated).getDay()
     );
   }
 
   getProject(id: string) {
     return this.appProjectsRegistry.get(id);
+  }
+
+  updateStorage() {
+    if (this.appProjectsRegistry.size > 0) {
+      window.localStorage.setItem(
+        this.appProjectsRegistryKey,
+        JSON.stringify(this.appProjectsRegistry)
+      );
+    } else {
+      window.localStorage.removeItem(this.appProjectsRegistryKey);
+    }
   }
 }

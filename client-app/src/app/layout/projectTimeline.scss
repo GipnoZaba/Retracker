@@ -1,0 +1,15 @@
+.timeline {
+    width: auto;
+    height: 370px;
+    overflow-x: scroll;
+    overflow-y: hidden;
+}
+
+.timeline-element {
+    width: 300px !important;
+    vertical-align: top;
+}
+
+.project-list {
+    height: 300px;
+}

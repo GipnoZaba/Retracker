@@ -10,11 +10,12 @@ export interface IProject {
 }
 
 export interface IProjectFormValues extends Partial<IProject> {
+  id: string;
   dateCreated?: Date;
 }
 
 export class ProjectFormValues implements IProjectFormValues {
-  id?: string = undefined;
+  id: string = "";
   title?: string = "";
   description?: string = "";
   dateCreated?: Date = undefined;

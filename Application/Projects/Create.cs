@@ -1,13 +1,12 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Domain;
 using MediatR;
 using Persistence;
-using System.Linq;
 using FluentValidation;
 using Application.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Domain.Projects;
 
 namespace Application.Projects
 {
@@ -40,31 +39,30 @@ namespace Application.Projects
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                AppTask appTask = new AppTask
+                Project project = new Project
                 {
                     Id = request.Id,
-                    OrderIndex = _context.UserAppTasks.Where(task => task.AppUser.UserName == _userAccessor.GetCurrentUsername()).Count(),
                     Title = request.Title,
                     DateCreated = request.DateCreated
                 };
 
-                _context.AppTasks.Add(appTask);
+                _context.Projects.Add(project);
 
                 var user = await _context.Users.SingleOrDefaultAsync(x => x.UserName == _userAccessor.GetCurrentUsername());
-                var creator = new UserAppTask
+                var creator = new UserProject
                 {
                     AppUser = user,
-                    AppTask = appTask,
+                    Project = project,
                     IsCreator = true
                 };
 
-                _context.UserAppTasks.Add(creator);
+                _context.UserProjects.Add(creator);
 
                 bool isSaved = await _context.SaveChangesAsync() > 0;
 
                 if (isSaved) return Unit.Value;
 
-                throw new Exception("Proplem while creating task.");
+                throw new Exception("Proplem while creating project.");
             }
         }
     }

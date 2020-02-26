@@ -14,6 +14,7 @@ namespace Persistence
         public DbSet<AppTask> AppTasks { get; set; }
         public DbSet<UserAppTask> UserAppTasks { get; set; }
         public DbSet<Project> Projects { get; set; }
+        public DbSet<UserProject> UserProjects { get; set; }
         public DbSet<ProjectList> ProjectLists { get; set; }
         public DbSet<ProjectTask> ProjectTasks { get; set; }
 

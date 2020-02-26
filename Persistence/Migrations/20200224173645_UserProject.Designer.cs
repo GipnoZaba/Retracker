@@ -9,8 +9,8 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20200215134836_MassChanges")]
-    partial class MassChanges
+    [Migration("20200224173645_UserProject")]
+    partial class UserProject
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -187,7 +187,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("UserProject");
+                    b.ToTable("UserProjects");
                 });
 
             modelBuilder.Entity("Domain.UserAppTask", b =>

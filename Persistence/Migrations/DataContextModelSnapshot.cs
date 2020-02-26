@@ -185,7 +185,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("UserProject");
+                    b.ToTable("UserProjects");
                 });
 
             modelBuilder.Entity("Domain.UserAppTask", b =>

@@ -1,12 +1,21 @@
 $spacer: 10px;
-.timeline {
-    width: 100%;
-    overflow: scroll;
-  }
 
-.project-list {
-    width: 20%;
+// project
+.project-card {
+    height: 150px;
 }
+
+// scroll
+.scroll-vertical {
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.scroll-horizontal {
+    overflow-x: scroll;
+    overflow-y: hidden;
+}
+
 // colors
 .segment.secondary {
     background-color: #ebe3de !important;
