@@ -9,8 +9,8 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20200224173645_UserProject")]
-    partial class UserProject
+    [Migration("20200227194427_Restart")]
+    partial class Restart
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -155,17 +155,13 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Projects.ProjectTask", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<Guid>("AppTaskId")
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("ProjectListId")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Title")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
+                    b.HasKey("AppTaskId", "ProjectListId");
 
                     b.HasIndex("ProjectListId");
 
@@ -351,6 +347,12 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Projects.ProjectTask", b =>
                 {
+                    b.HasOne("Domain.AppTask", "AppTask")
+                        .WithMany("ProjectTasks")
+                        .HasForeignKey("AppTaskId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Domain.Projects.ProjectList", "ProjectList")
                         .WithMany("Tasks")
                         .HasForeignKey("ProjectListId")

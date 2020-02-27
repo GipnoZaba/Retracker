@@ -3,7 +3,7 @@ import { IAppTask, IAppTaskFormValues } from "../models/appTask";
 import { toast } from "react-toastify";
 import { IUser, IUserFormValues } from "../models/user";
 import { history } from "../..";
-import { IProject, IProjectFormValues } from "../models/project";
+import { IProject, IProjectFormValues, IProjectTaskFormValues, IProjectList, IProjectTask, IProjectListFormValues } from "../models/project";
 
 axios.defaults.baseURL = "http://localhost:5000/api";
 
@@ -91,8 +91,26 @@ const Projects = {
   delete: (id: string) => requests.del(`/projects/${id}`)
 };
 
+const ProjectLists = {
+  create: (projectList: IProjectListFormValues) => requests.post("/projects/lists", projectList),
+  details: (id: string): Promise<IProjectList> => requests.get(`/projects/lists/${id}`),
+  edit: (projectList: IProjectListFormValues) => requests.put(`/projects/lists/${projectList.id}`, projectList),
+  delete: (id: string) => requests.del(`/projects/lists/${id}`)
+}
+
+const ProjectTasks = {
+  create: (projectTask: IProjectTaskFormValues) => requests.post("/projects/lists/tasks", projectTask),
+  details: (id: string): Promise<IProjectTask> => requests.get(`/projects/lists/tasks/${id}`),
+  edit: (projectTask: IProjectTaskFormValues) => requests.put(`/projects/lists/tasks/${projectTask.id}`, projectTask),
+  complete: (id: string) => requests.patch(`/projects/lists/tasks/${id}/complete`, {}),
+  restore: (id: string) => requests.patch(`/projects/lists/tasks/${id}/restore`, {}),
+  delete: (id: string) => requests.del(`/projects/lists/tasks/${id}`)
+}
+
 export default {
   AppTasks,
   User,
-  Projects
+  Projects,
+  ProjectLists,
+  ProjectTasks
 };

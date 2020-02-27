@@ -3,10 +3,27 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Persistence.Migrations
 {
-    public partial class UsersAdded : Migration
+    public partial class Restart : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "AppTasks",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    OrderIndex = table.Column<int>(nullable: false),
+                    Title = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true),
+                    Deadline = table.Column<DateTime>(nullable: false),
+                    DateCreated = table.Column<DateTime>(nullable: false),
+                    IsDone = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppTasks", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
@@ -45,6 +62,20 @@ namespace Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Projects",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    Title = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true),
+                    DateCreated = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Projects", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -153,6 +184,99 @@ namespace Persistence.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "UserAppTasks",
+                columns: table => new
+                {
+                    AppTaskId = table.Column<Guid>(nullable: false),
+                    AppUserId = table.Column<string>(nullable: false),
+                    IsCreator = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserAppTasks", x => new { x.AppUserId, x.AppTaskId });
+                    table.ForeignKey(
+                        name: "FK_UserAppTasks_AppTasks_AppTaskId",
+                        column: x => x.AppTaskId,
+                        principalTable: "AppTasks",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserAppTasks_AspNetUsers_AppUserId",
+                        column: x => x.AppUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProjectLists",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    ProjectId = table.Column<Guid>(nullable: false),
+                    Deadline = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProjectLists", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProjectLists_Projects_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "Projects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserProjects",
+                columns: table => new
+                {
+                    ProjectId = table.Column<Guid>(nullable: false),
+                    AppUserId = table.Column<string>(nullable: false),
+                    IsCreator = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserProjects", x => new { x.AppUserId, x.ProjectId });
+                    table.ForeignKey(
+                        name: "FK_UserProjects_AspNetUsers_AppUserId",
+                        column: x => x.AppUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserProjects_Projects_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "Projects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProjectTasks",
+                columns: table => new
+                {
+                    AppTaskId = table.Column<Guid>(nullable: false),
+                    ProjectListId = table.Column<Guid>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProjectTasks", x => new { x.AppTaskId, x.ProjectListId });
+                    table.ForeignKey(
+                        name: "FK_ProjectTasks_AppTasks_AppTaskId",
+                        column: x => x.AppTaskId,
+                        principalTable: "AppTasks",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ProjectTasks_ProjectLists_ProjectListId",
+                        column: x => x.ProjectListId,
+                        principalTable: "ProjectLists",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -189,6 +313,26 @@ namespace Persistence.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProjectLists_ProjectId",
+                table: "ProjectLists",
+                column: "ProjectId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProjectTasks_ProjectListId",
+                table: "ProjectTasks",
+                column: "ProjectListId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserAppTasks_AppTaskId",
+                table: "UserAppTasks",
+                column: "AppTaskId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserProjects_ProjectId",
+                table: "UserProjects",
+                column: "ProjectId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -209,10 +353,28 @@ namespace Persistence.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "ProjectTasks");
+
+            migrationBuilder.DropTable(
+                name: "UserAppTasks");
+
+            migrationBuilder.DropTable(
+                name: "UserProjects");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
+                name: "ProjectLists");
+
+            migrationBuilder.DropTable(
+                name: "AppTasks");
+
+            migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Projects");
         }
     }
 }

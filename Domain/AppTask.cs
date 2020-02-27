@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Domain.Projects;
 
 namespace Domain
 {
@@ -13,5 +14,6 @@ namespace Domain
         public DateTime DateCreated { get; set; }
         public bool IsDone { get; set; }
         public virtual ICollection<UserAppTask> UserAppTasks { get; set; }
+        public virtual ICollection<ProjectTask> ProjectTasks { get; set; }
     }
 }

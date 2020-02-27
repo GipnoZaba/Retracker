@@ -49,11 +49,16 @@ namespace Persistence
                 .WithMany(a => a.UserProjects)
                 .HasForeignKey(u => u.ProjectId);
 
+
             builder.Entity<ProjectList>()
                 .HasOne(l => l.Project)
                 .WithMany(p => p.Lists)
                 .HasForeignKey(l => l.ProjectId);
 
+
+            builder.Entity<ProjectTask>(x => x.HasKey(pt =>
+                new { pt.AppTaskId, pt.ProjectListId }));
+            
             builder.Entity<ProjectTask>()
                 .HasOne(t => t.ProjectList)
                 .WithMany(l => l.Tasks)
